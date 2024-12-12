@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">GoWorkout</string>
+    <string name="hint_email" translatable="false">Email</string>
+    <string name="hint_password" translatable="false">Password</string>
+    <string name="text_enter" translatable="false">Login</string>
+    <string name="text_save">Guardar</string>
+    <string name="text_welcome">Bem-Vindo(a)</string>
+    <string name="drawer_open" translatable="false">Open Drawer</string>
+    <string name="drawer_close" translatable="false">Close Drawer</string>
+    <string name="close_drawer" translatable="false">Close Drawer</string>
+    <string name="aulas">Marcar Aula</string>
+    <string name="text_register">Não tem conta? Registe-se</string>
+    <string name="text_login">Já tem conta? Login</string>
+
+</resources>

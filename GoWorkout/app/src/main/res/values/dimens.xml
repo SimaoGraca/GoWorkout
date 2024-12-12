@@ -1,0 +1,6 @@
+<!-- res/values/dimens.xml -->
+<resources>
+    <!-- Define a altura da topBar -->
+    <dimen name="top_bar">70dp</dimen>
+    <dimen name="icon_size">24dp</dimen>
+</resources>

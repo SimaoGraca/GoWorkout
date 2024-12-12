@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.GoWorkout" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="android:fontFamily">@font/leaguespartan_regular</item>
+    </style>
+
+    <style name="Theme.GoWorkout" parent="Base.Theme.GoWorkout" />
+
+    <style name="CustomBottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
+        <!-- Remove o círculo em torno do ícone ativo -->
+        <item name="itemRippleColor">@null</item>
+        <item name="itemActiveIndicatorStyle">@style/NoActiveIndicator</item>
+    </style>
+
+    <style name="NoActiveIndicator">
+        <!-- Remove o indicador visual ativo -->
+        <item name="android:color">@android:color/transparent</item>
+    </style>
+</resources>

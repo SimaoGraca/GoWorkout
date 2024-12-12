@@ -1,0 +1,10 @@
+<resources>
+    <!-- Estilo personalizado para o texto dos itens ativos -->
+    <style name="BottomNavTextAppearanceActive" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">11sp</item>
+    </style>
+
+    <style name="BottomNavTextAppearanceInactive" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">11sp</item>
+    </style>
+</resources>
