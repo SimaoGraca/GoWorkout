@@ -84,6 +84,7 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
         }
     }
 
+
     private fun updateCurrentDate() {
         val sdf = SimpleDateFormat("EEEE, dd 'de' MMMM", Locale("pt", "PT"))
         val formattedDate = sdf.format(currentCalendar.time)
@@ -173,15 +174,28 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
 
         if (!jsonString.isNullOrEmpty()) {
             val jsonMarcacoes = JSONObject(jsonString)
-            for (key in jsonMarcacoes.keys()) {
-                val aulaId = key.toInt()
-                val idMarcacao = jsonMarcacoes.getInt(key)
-                marcacoesMap[aulaId] = idMarcacao
+
+            // Recuperar o ID do usuário armazenado
+            val storedUserId = jsonMarcacoes.optInt("id_user", -1)
+
+            // Recuperar o ID do usuário atualmente logado do SharedPreferences "pmLogin"
+            val currentUserId = activity?.getSharedPreferences("pmLogin", Context.MODE_PRIVATE)?.getInt("id_user", -1)
+
+            // Verificar se o ID do usuário armazenado é igual ao ID do usuário logado
+            if (storedUserId == currentUserId) {
+                for (key in jsonMarcacoes.keys()) {
+                    if (key != "id_user") {
+                        val aulaId = key.toInt()
+                        val idMarcacao = jsonMarcacoes.getInt(key)
+                        marcacoesMap[aulaId] = idMarcacao
+                    }
+                }
             }
         }
     }
 
-    private fun saveMarcacoesToPreferences() {
+
+    private fun saveMarcacoesToPreferences(userId: Int) {
         val sharedPreferences = requireContext().getSharedPreferences("MarcacoesPrefs", Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
@@ -190,9 +204,13 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
             jsonMarcacoes.put(aulaId.toString(), idMarcacao)
         }
 
+        // Adicionar o ID do usuário ao JSON
+        jsonMarcacoes.put("id_user", userId)
+
         editor.putString("marcacoes", jsonMarcacoes.toString())
         editor.apply()
     }
+
 
     override fun onAulaCheckClick(aulaId: Int, userId: Int, isMarked: Boolean) {
         // Encontrar a aula correspondente
@@ -257,14 +275,14 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                         if (id != -1) {
                             marcacoesMap[aulaId] = id
                             Log.d("MarcacaoFragment", "ID da marcação recebida: $id") // Log do id da marcação
-                            saveMarcacoesToPreferences() // Salva no SharedPreferences
+                            saveMarcacoesToPreferences(userId) // Salva no SharedPreferences
                         } else {
                             Log.d("MarcacaoFragment", "ID da marcação não recebido ou inválido")
                         }
                     } else {
                         val removedId = marcacoesMap.remove(aulaId)
                         Log.d("MarcacaoFragment", "Aula desmarcada. ID da marcação removido: $removedId") // Log da remoção
-                        saveMarcacoesToPreferences() // Salva no SharedPreferences
+                        saveMarcacoesToPreferences(userId) // Salva no SharedPreferences
                     }
 
                     Toast.makeText(context, "Operação realizada com sucesso", Toast.LENGTH_SHORT).show()
