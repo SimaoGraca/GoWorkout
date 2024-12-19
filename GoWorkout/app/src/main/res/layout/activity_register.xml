@@ -33,14 +33,13 @@
                 android:id="@+id/profileImageView"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/circle_image"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/circle_background"
                 android:scaleType="centerCrop"
                 android:clickable="true"
                 android:focusable="true"
                 android:cropToPadding="true"
                 android:layout_gravity="center" />
-
 
             <EditText
                 android:id="@+id/editTextNome"
@@ -62,7 +61,6 @@
                 android:id="@+id/editTextEmail"
                 android:layout_width="265dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/background_edit_text"
                 android:drawablePadding="6dp"
                 android:drawableTint="#000000"
@@ -79,7 +77,6 @@
                 android:id="@+id/editTextTelemovel"
                 android:layout_width="265dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/background_edit_text"
                 android:drawablePadding="6dp"
                 android:drawableTint="#000000"
@@ -96,7 +93,6 @@
                 android:id="@+id/editTextDataNascimento"
                 android:layout_width="265dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/background_edit_text"
                 android:drawablePadding="6dp"
                 android:drawableTint="#000000"
@@ -114,21 +110,22 @@
                 android:id="@+id/spinnerGenero"
                 android:layout_width="265dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/background_edit_text"
                 android:padding="12dp"
-                android:paddingStart="25dp"
+                android:paddingStart="17dp"
                 android:textColor="#000000"
                 android:textColorHint="#000000"
-                android:textSize="13sp"
-                android:spinnerMode="dropdown"/>
+                android:textSize="8sp"
+                android:spinnerMode="dropdown"
+                android:popupBackground="#FFFFFF"
+                android:dropDownWidth="265dp"
+                app:popupTheme="@style/SpinnerItemTheme"/>
 
             <!-- Container de altura e peso -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="8dp"
                 android:gravity="center_horizontal">
 
                 <EditText
@@ -168,20 +165,19 @@
                 android:id="@+id/spinnerClube"
                 android:layout_width="265dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/background_edit_text"
                 android:padding="12dp"
-                android:paddingStart="25dp"
+                android:paddingStart="17dp"
                 android:textColor="#000000"
                 android:textColorHint="#000000"
-                android:textSize="13sp"
-                android:spinnerMode="dropdown"/>
+                android:spinnerMode="dropdown"
+                android:popupBackground="#FFFFFF"
+                android:dropDownWidth="265dp" />
 
             <EditText
                 android:id="@+id/editTextPassword"
                 android:layout_width="265dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/background_edit_text"
                 android:drawablePadding="6dp"
                 android:drawableTint="#000000"
@@ -198,7 +194,6 @@
                 android:id="@+id/editTextConfirmPassword"
                 android:layout_width="265dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/background_edit_text"
                 android:drawablePadding="6dp"
                 android:drawableTint="#000000"

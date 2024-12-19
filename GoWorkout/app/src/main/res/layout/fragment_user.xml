@@ -44,7 +44,6 @@
                     android:background="@drawable/circular_background"
                     android:contentDescription="Profile Image"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/logogo"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />

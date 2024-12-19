@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
 import ua.goworkout.R
 import ua.goworkout.databinding.FragmentUserBinding
@@ -121,11 +122,12 @@ class UserFragment : Fragment() {
         // LOG - Verificando os horários recuperados
         Log.d("UserFragment", "$diasUteisFormatted, $sabadoFormatted, $domingoFormatted, $feriadoFormatted")
 
-        // Carregar a imagem de perfil usando Glide
+        // Carregar a imagem de perfil usando Glide com recorte circular
         if (fotoPerfil != null) {
             val imageUrl = "https://esan-tesp-ds-paw.web.ua.pt/tesp-ds-g37/uploads/imagem/$fotoPerfil"
             Glide.with(this)
                 .load(imageUrl)
+                .apply(RequestOptions.circleCropTransform()) // Aplica o recorte circular
                 .into(binding.profileImage)
         }
 

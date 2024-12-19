@@ -1,19 +1,26 @@
+
 package ua.goworkout
 
 import VolleyMultipartRequest
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import org.json.JSONObject
 import ua.goworkout.databinding.ActivityRegisterBinding
 import java.util.Calendar
@@ -31,11 +38,42 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        // Configurar o Spinner com opções de género
-        val generos = arrayOf("Masculino", "Feminino", "Outro")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, generos)
+        // Configurar o Spinner com opções de gênero
+        val generos = arrayOf("Escolha o seu género", "Masculino", "Feminino", "Outro")
+        val adapter = object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, generos) {
+            // Alterando a cor do texto do item selecionado, tamanho da fonte e padding
+            override fun getView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup): android.view.View {
+                val view = super.getView(position, convertView, parent)
+                val textView = view.findViewById<TextView>(android.R.id.text1)
+                textView.setTextColor(Color.parseColor("#000000")) // Cor preta para o texto
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f) // Tamanho da letra para 10sp
+
+                return view
+            }
+
+            // Alterando a cor do texto, tamanho da fonte e padding na lista suspensa
+            override fun getDropDownView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup): android.view.View {
+                val view = super.getDropDownView(position, convertView, parent)
+                val textView = view.findViewById<TextView>(android.R.id.text1)
+                textView.setTextColor(Color.parseColor("#000000")) // Cor preta para o texto
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f) // Tamanho da letra para 10sp
+
+                return view
+            }
+        }
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerGenero.adapter = adapter
+
+
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerGenero.adapter = adapter
+
+
+        // Configurando o adapter para o Spinner
+        binding.spinnerGenero.adapter = adapter
+
 
         // Configurar o clique na imagem de perfil
         binding.profileImageView.setOnClickListener {
@@ -87,7 +125,11 @@ class RegisterActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
             imageUri = data.data
-            binding.profileImageView.setImageURI(imageUri)
+            // Carregar a imagem selecionada usando Glide com recorte circular
+            Glide.with(this)
+                .load(imageUri)
+                .apply(RequestOptions.circleCropTransform()) // Aplica o recorte circular
+                .into(binding.profileImageView)
         }
     }
 
@@ -102,6 +144,10 @@ class RegisterActivity : AppCompatActivity() {
                     val clubesArray = response.getJSONArray("clubes")
                     val clubesList = mutableListOf<String>()
                     val clubesMap = mutableMapOf<String, Int>()
+
+                    // Adiciona o item de "placeholder" no começo da lista
+                    clubesList.add("Escolha o seu clube")
+
                     for (i in 0 until clubesArray.length()) {
                         val clube = clubesArray.getJSONObject(i)
                         val idClube = clube.getInt("id")
@@ -109,12 +155,34 @@ class RegisterActivity : AppCompatActivity() {
                         clubesList.add(nomeClube)
                         clubesMap[nomeClube] = idClube
                     }
-                    val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, clubesList)
+
+                    // Criando um adapter com personalização da cor do texto
+                    val adapter = object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, clubesList) {
+                        // Alterando a cor do texto do item selecionado
+                        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                            val view = super.getView(position, convertView, parent)
+                            val textView = view.findViewById<TextView>(android.R.id.text1)
+                            textView.setTextColor(Color.parseColor("#000000")) // Cor preta
+                            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f) // Tamanho da letra para 10sp
+                            return view
+                        }
+
+                        // Alterando a cor do texto no dropdown (itens visíveis quando o Spinner é clicado)
+                        override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                            val view = super.getDropDownView(position, convertView, parent)
+                            val textView = view.findViewById<TextView>(android.R.id.text1)
+                            textView.setTextColor(Color.parseColor("#000000")) // Cor preta
+                            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f) // Tamanho da letra para 10sp
+                            return view
+                        }
+                    }
+
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     binding.spinnerClube.adapter = adapter
 
                     // Guardar os IDs dos clubes no Spinner usando uma tag
                     binding.spinnerClube.tag = clubesMap
+
                 } catch (e: Exception) {
                     Log.e("RegisterActivity", "Erro ao processar resposta da API: ", e)
                     Toast.makeText(this, "Erro ao buscar clubes", Toast.LENGTH_SHORT).show()
@@ -128,6 +196,7 @@ class RegisterActivity : AppCompatActivity() {
 
         queue.add(jsonObjectRequest)
     }
+
 
 
     fun doRegister(view: View) {
@@ -185,7 +254,7 @@ class RegisterActivity : AppCompatActivity() {
                 // Log: Verificar a resposta da API
                 Log.d("RegisterActivity", "Resposta da API: $response")
                 Toast.makeText(this, "Registo realizado com sucesso", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this,LoginActivity::class.java))
+                startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             },
             { error ->

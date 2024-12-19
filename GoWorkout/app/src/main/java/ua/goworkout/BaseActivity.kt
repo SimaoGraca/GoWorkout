@@ -190,14 +190,7 @@ open class BaseActivity : AppCompatActivity() {
         isPortugueseFlag = !isPortugueseFlag
         sharedPref.edit().putString("language", if (isPortugueseFlag) "pt" else "en").apply()
 
-        // Aqui não estamos reiniciando a Activity, só aplicando as mudanças diretamente
-        // Isso garantirá que a bandeira e o idioma sejam alterados sem reiniciar a Activity
     }
-
-
-
-
-
 
     private fun checkUserFeedback(userId: String) {
         val url = "https://esan-tesp-ds-paw.web.ua.pt/tesp-ds-g37/api/checkFeedback.php"
