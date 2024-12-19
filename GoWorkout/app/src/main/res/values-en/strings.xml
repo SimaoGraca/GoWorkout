@@ -1,9 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">GoWorkout</string>
+    <string name="hint_email" translatable="false">Email</string>
+    <string name="hint_password" translatable="false">Password</string>
+    <string name="text_enter" translatable="false">Login</string>
     <string name="text_save">Save</string>
-    <string name="text_welcome">Welcome</string>
-    <string name="aulas">Schedule Class</string>
-    <string name="text_register">Don\'t have an account? Sign up.</string>
-    <string name="text_login">Already have an account? Login.</string>
+    <string name="text_welcome">Welcome,</string>
+    <string name="drawer_open" translatable="false">Open Drawer</string>
+    <string name="drawer_close" translatable="false">Close Drawer</string>
+    <string name="close_drawer" translatable="false">Close Drawer</string>
+    <string name="aulas">Schedule classes</string>
+    <string name="text_register">Don’t have an account? Register</string>
+    <string name="text_login">Already have an account? Login</string>
+    <string name="text_sair">Logout</string>
+    <string name="text_horariofunc">Operating Hours</string>
+    <string name="text_informacoesclube">Club Information</string>
+
+    <!-- Frases Motivacionais -->
+    <string-array name="frases_motivacionais">
+        <item>Believe in yourself and all your potential.</item>
+        <item>Every day is a new opportunity to be better.</item>
+        <item>Success is the sum of small efforts repeated daily.</item>
+        <item>Never give up on your dreams, believe they are possible.</item>
+        <item>Great achievements begin with small actions.</item>
+    </string-array>
 </resources>

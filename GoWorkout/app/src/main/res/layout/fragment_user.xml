@@ -36,7 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <!-- Foto de perfil do usuário -->
+                <!-- Foto de perfil do user -->
                 <ImageView
                     android:id="@+id/profile_image"
                     android:layout_width="80dp"
@@ -50,37 +50,40 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <!-- Texto de boas-vindas -->
+
+                <!-- Texto motivacional -->
+
                 <TextView
                     android:id="@+id/welcome_message"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_marginTop="0dp"
-                android:paddingBottom="8dp"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@+id/motivational_quote"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/profile_image"
-                app:layout_constraintTop_toTopOf="parent" />
+                    android:paddingBottom="8dp"
+                    android:text="@string/text_welcome"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/profile_image"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Texto motivacional -->
                 <TextView
                     android:id="@+id/motivational_quote"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="17dp"
                     android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
                     android:gravity="center_vertical"
                     android:text="Stay positive, work hard, make it happen."
                     android:textColor="#B0B0B0"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/profile_image"
-                    app:layout_constraintTop_toBottomOf="@+id/welcome_message" />
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/profile_image" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
@@ -92,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
-            android:text="Informações do seu clube"
+            android:text="@string/text_informacoesclube"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -130,7 +133,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
-            android:text="Horário de Funcionamento"
+            android:text="@string/text_horariofunc"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"

@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
+import ua.goworkout.R
 import ua.goworkout.databinding.FragmentUserBinding
 import kotlin.random.Random
 
@@ -20,13 +21,7 @@ class UserFragment : Fragment() {
     private var _binding: FragmentUserBinding? = null
     private val binding get() = _binding!!
 
-    private val frasesMotivacionais = arrayOf(
-        "Acredite em si mesmo e em todo o seu potencial.",
-        "Cada dia é uma nova oportunidade para ser melhor.",
-        "O sucesso é a soma de pequenos esforços repetidos diariamente.",
-        "Nunca desista dos seus sonhos, acredite que são possíveis.",
-        "Grandes conquistas começam com pequenas ações."
-    )
+    private lateinit var frasesMotivacionais: Array<String>
 
     data class Horario(
         val horario_abertura: String?,
@@ -44,6 +39,9 @@ class UserFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Acesso ao array de frases motivacionais no momento certo
+        frasesMotivacionais = resources.getStringArray(R.array.frases_motivacionais)
 
         // Recuperar dados do usuário do SharedPreferences
         val sharedPref = activity?.getSharedPreferences("pmLogin", Context.MODE_PRIVATE)
@@ -63,7 +61,7 @@ class UserFragment : Fragment() {
 
         // Exibir mensagem de boas-vindas
         if (idUser != -1 && nome != null) {
-            binding.welcomeMessage.text = "Bem-Vindo(a), $nome"
+            binding.welcomeMessage.text = resources.getString(R.string.text_welcome) + " " + nome
         } else {
             binding.welcomeMessage.text = "User não encontrado"
         }
@@ -72,7 +70,7 @@ class UserFragment : Fragment() {
         binding.gymInformation.text = "Clube: $clubeNome\nMorada: $endereco\nCidade: $cidade"
 
         // LOG - Verificando os dados recuperados de SharedPreferences
-        Log.d("UserFragment", "idUser: $idUser, Nome: $nome, Clube: $clubeNome,Clube_id: $id_clube, Cidade: $cidade")
+        Log.d("UserFragment", "idUser: $idUser, Nome: $nome, Clube: $clubeNome, Clube_id: $id_clube, Cidade: $cidade")
 
         // Horários de funcionamento - Recuperando os dados JSON do SharedPreferences
         val diasUteisJson = sharedPref?.getString("dias_uteis", "Não disponível")
@@ -140,29 +138,28 @@ class UserFragment : Fragment() {
         return if (hora != null && hora.contains(":")) {
             val splitHora = hora.split(":")
             if (splitHora.size >= 2) {
-                return "${splitHora[0]}:${splitHora[1]}"  // Retorna a hora e minutos
+                "${splitHora[0]}:${splitHora[1]}"  // Retorna a hora e minutos
             } else {
-                // Caso a string contenha o ":", mas não tenha pelo menos 2 partes (como "07:" ou ":00")
-                return "Formato de hora incompleto"
+                "Formato de hora incompleto"
             }
         } else {
-            // Caso a hora seja null ou não contenha ":"
-            return "Formato de hora inválido"
+            "Formato de hora inválido"
         }
     }
 
-    // Função para escolher uma frase motivacional aleatória
     private fun escolherFraseAleatoria(sharedPref: SharedPreferences?): String {
+        // Recupera o índice da frase armazenada nas SharedPreferences
         val indiceFrase = sharedPref?.getInt("frase_indice", -1)
+
         return if (indiceFrase != -1) {
             frasesMotivacionais[indiceFrase!!]
         } else {
+            // Se não houver índice salvo, escolhe um índice aleatório
             val novoIndice = Random.nextInt(frasesMotivacionais.size)
-            sharedPref?.edit()?.putInt("frase_indice", novoIndice)?.apply()
+            sharedPref?.edit()?.putInt("frase_indice", novoIndice)?.apply() // Salva o índice
             frasesMotivacionais[novoIndice]
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

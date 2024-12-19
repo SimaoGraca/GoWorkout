@@ -4,12 +4,24 @@
     <string name="hint_password" translatable="false">Password</string>
     <string name="text_enter" translatable="false">Login</string>
     <string name="text_save">Guardar</string>
-    <string name="text_welcome">Bem-Vindo(a)</string>
+    <string name="text_welcome">Bem-Vindo(a),</string>
     <string name="drawer_open" translatable="false">Open Drawer</string>
     <string name="drawer_close" translatable="false">Close Drawer</string>
     <string name="close_drawer" translatable="false">Close Drawer</string>
-    <string name="aulas">Marcar Aula</string>
+    <string name="aulas">Marcar</string>
     <string name="text_register">Não tem conta? Registe-se</string>
     <string name="text_login">Já tem conta? Login</string>
+    <string name="text_sair">Sair</string>
+    <string name="text_horariofunc">Horário de Funcionamento</string>
+    <string name="text_informacoesclube">Informações do seu clube</string>
+
+    <!-- Frases Motivacionais -->
+    <string-array name="frases_motivacionais">
+        <item>Acredite em si mesmo e em todo o seu potencial.</item>
+        <item>Cada dia é uma nova oportunidade para ser melhor.</item>
+        <item>O sucesso é a soma de pequenos esforços repetidos diariamente.</item>
+        <item>Nunca desista dos seus sonhos, acredite que são possíveis.</item>
+        <item>Grandes conquistas começam com pequenas ações.</item>
+    </string-array>
 
 </resources>
