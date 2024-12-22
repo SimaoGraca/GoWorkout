@@ -14,6 +14,7 @@
     <string name="text_sair">Logout</string>
     <string name="text_horariofunc">Operating Hours</string>
     <string name="text_informacoesclube">Club Information</string>
+    <string name="text_news">News</string>
 
     <!-- Frases Motivacionais -->
     <string-array name="frases_motivacionais">

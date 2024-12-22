@@ -46,6 +46,9 @@ dependencies {
     implementation (libs.play.services.base)
     implementation(libs.common)
     implementation(libs.okhttp)
+    implementation(libs.androidx.junit.ktx)
+    testImplementation(libs.junit.junit)
+    androidTestImplementation(libs.junit.junit)
 
 }
 

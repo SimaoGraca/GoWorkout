@@ -19,6 +19,8 @@ playServicesBase = "18.5.0"
 volley = "1.2.1"
 compiler = "3.2.0-alpha11"
 common = "0.10.0"
+junitJunit = "4.12"
+junitKtx = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version = "1.13.1" }
@@ -40,6 +42,8 @@ play-services-base = { module = "com.google.android.gms:play-services-base", ver
 volley = { module = "com.android.volley:volley", version.ref = "volley" }
 androidx-compiler = { group = "androidx.databinding", name = "compiler", version.ref = "compiler" }
 common = { group = "com.google.ai.client.generativeai", name = "common", version.ref = "common" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
+androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

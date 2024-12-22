@@ -86,25 +86,29 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
+        <!-- CardView para as Notícias -->
+        <TextView
+            android:id="@+id/title_news"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="@string/text_news"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/noticiasCard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/welcome_card"
+            tools:ignore="MissingConstraints" />
 
 
         <!-- Título 'Informações' -->
-        <TextView
-            android:id="@+id/information_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="@string/text_informacoesclube"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/welcome_card" />
 
-        <!-- CardView para as informações do ginásio -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/information_card"
+            android:id="@+id/noticiasCard"
             android:layout_width="0dp"
+            android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:backgroundTint="#1e1e1e"
@@ -113,57 +117,94 @@
             app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/information_title">
+            app:layout_constraintTop_toBottomOf="@+id/title_news">
 
-            <!-- TextView com as informações do ginásio -->
+            <!-- TextView com as notícias -->
             <TextView
-                android:id="@+id/gym_information"
+                android:id="@+id/news_information"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:lineSpacingExtra="5dp"
                 android:padding="15dp"
                 android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:lineSpacingExtra="5dp"/>
+                android:textSize="14sp" />
         </androidx.cardview.widget.CardView>
 
-        <!-- Título 'Horário de Funcionamento' -->
         <TextView
-            android:id="@+id/horario_title"
+        android:id="@+id/information_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/text_informacoesclube"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noticiasCard" />
+
+    <!-- CardView para as informações do ginásio -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/information_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:backgroundTint="#1e1e1e"
+        android:padding="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/information_title">
+
+        <!-- TextView com as informações do ginásio -->
+        <TextView
+            android:id="@+id/gym_information"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="@string/text_horariofunc"
+            android:padding="15dp"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/information_card" />
+            android:textSize="14sp"
+            android:lineSpacingExtra="5dp"/>
+    </androidx.cardview.widget.CardView>
 
-        <!-- CardView para o horário de funcionamento -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/horariofunc_card"
-            android:layout_width="0dp"
+    <!-- Título 'Horário de Funcionamento' -->
+    <TextView
+        android:id="@+id/horario_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/text_horariofunc"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/information_card" />
+
+    <!-- CardView para o horário de funcionamento -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/horariofunc_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:backgroundTint="#1e1e1e"
+        android:padding="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/horario_title">
+
+        <!-- TextView com o horário de funcionamento -->
+        <TextView
+            android:id="@+id/gymhorario_information"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:backgroundTint="#1e1e1e"
-            android:padding="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/horario_title">
+            android:padding="15dp"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:lineSpacingExtra="5dp"/>
+    </androidx.cardview.widget.CardView>
 
-            <!-- TextView com o horário de funcionamento -->
-            <TextView
-                android:id="@+id/gymhorario_information"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="15dp"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:lineSpacingExtra="5dp"/>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Botão 'Terminar Sessão' -->
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+    <!-- Botão 'Terminar Sessão' -->
+</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>

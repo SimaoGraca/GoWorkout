@@ -3,16 +3,28 @@ package ua.goworkout.fragments
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.StyleSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
+import org.json.JSONObject
 import ua.goworkout.R
 import ua.goworkout.databinding.FragmentUserBinding
 import kotlin.random.Random
@@ -54,6 +66,12 @@ class UserFragment : Fragment() {
         val cidade = sharedPref?.getString("cidade", "Cidade não encontrada")
         val endereco = sharedPref?.getString("endereco", "Endereço não encontrado")
         val cor = sharedPref?.getString("cor", "#000000")
+
+        if (id_clube != null) {
+            if (idUser != null) {
+                checkNotices(idUser, id_clube)
+            }
+        }
 
         // Configurar a cor da barra de status (igual na BaseActivity)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -135,6 +153,82 @@ class UserFragment : Fragment() {
         val fraseAleatoria = escolherFraseAleatoria(sharedPref)
         binding.motivationalQuote.text = fraseAleatoria
     }
+
+    private fun checkNotices(userId: Int, clubeId: String) {
+        val url = "https://esan-tesp-ds-paw.web.ua.pt/tesp-ds-g37/api/checknotices.php"
+
+        // Criar o JSON para enviar o ID do usuário e outras informações
+        val jsonParams = JSONObject().apply {
+            put("userId", userId)
+            put("clube_id", clubeId)
+        }
+
+        // Criar a solicitação POST
+        val jsonObjectRequest = JsonObjectRequest(
+            Request.Method.POST, url, jsonParams,
+            { response ->
+                // Processar a resposta
+                val hasNotices = response.getBoolean("hasNotices")
+                if (hasNotices) {
+                    val notices = response.getJSONArray("notices")
+                    val noticesList = mutableListOf<Pair<String, String>>() // Para armazenar o título e descrição das notícias
+                    for (i in 0 until notices.length()) {
+                        val notice = notices.getJSONObject(i)
+                        val title = notice.getString("TITULO")
+                        val description = notice.getString("DESCRICAO")
+                        noticesList.add(Pair(title, description)) // Adiciona título e descrição
+                    }
+
+                    // Exibir o card de notícias se houver notícias
+                    binding.titleNews.visibility = View.VISIBLE
+                    binding.noticiasCard.visibility = View.VISIBLE
+
+
+                    // Atualizar o conteúdo do card com as notícias
+                    // Vamos exibir o título e a descrição dentro do CardView
+                    val formattedNotices = SpannableStringBuilder()
+
+                    for (notice in noticesList) {
+                        val title = notice.first
+                        val description = notice.second
+
+                        // Criar o texto formatado para a notícia
+                        val noticeText = SpannableString("$title\n$description\n\n")
+
+                        // Aplica o negrito e tamanho ao título (primeira parte do texto)
+                        val titleStart = 0
+                        val titleEnd = "$title\n".length
+                        noticeText.setSpan(StyleSpan(Typeface.BOLD), titleStart, titleEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                        noticeText.setSpan(AbsoluteSizeSpan(16, true), titleStart, titleEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                        // Aplica o tamanho normal à descrição (segunda parte do texto)
+                        val descriptionStart = titleEnd
+                        val descriptionEnd = noticeText.length
+                        noticeText.setSpan(AbsoluteSizeSpan(14, true), descriptionStart, descriptionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                        // Adiciona o texto formatado ao StringBuilder
+                        formattedNotices.append(noticeText)
+                    }
+
+                    // Exibir o texto formatado dentro do TextView
+                    binding.newsInformation.text = formattedNotices
+
+
+                } else {
+                    // Ocultar o card de notícias se não houver notícias
+                    binding.noticiasCard.visibility = View.GONE
+                }
+            },
+            { error ->
+                Log.e("UserFragment", "Erro ao verificar notícias: ${error.message}")
+            }
+        )
+
+        // Adicionar a solicitação à fila
+        Volley.newRequestQueue(requireContext()).add(jsonObjectRequest)
+    }
+
+
 
     private fun formatHora(hora: String?): Any {
         return if (hora != null && hora.contains(":")) {
