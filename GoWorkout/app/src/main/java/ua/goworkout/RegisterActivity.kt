@@ -12,6 +12,7 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
@@ -30,6 +31,7 @@ class RegisterActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityRegisterBinding.inflate(layoutInflater)
     }
+    private var clubesMap = mutableMapOf<String, Int>()
 
     private val PICK_IMAGE_REQUEST = 1
     private var imageUri: Uri? = null
@@ -65,8 +67,6 @@ class RegisterActivity : AppCompatActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerGenero.adapter = adapter
 
-
-
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerGenero.adapter = adapter
 
@@ -85,8 +85,31 @@ class RegisterActivity : AppCompatActivity() {
             showDatePickerDialog()
         }
 
-        // Buscar clubes da API
+        // Configuração do listener para o Spinner de Clubes
+        binding.spinnerClube.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parentView: AdapterView<*>, view: View?, position: Int, id: Long) {
+                val selectedClubeName = parentView.getItemAtPosition(position) as String
+                val clubesMap = binding.spinnerClube.tag as Map<String, Int>
+                val clubeId = clubesMap[selectedClubeName]
+
+                // Verifica se o clube selecionado é válido (não é "Escolha o seu clube")
+                if (clubeId != null && selectedClubeName != "Escolha o seu clube") {
+                    // Chama a função para buscar os planos do clube selecionado
+                    fetchPlanosByClube(clubeId)
+                }
+            }
+
+            override fun onNothingSelected(parentView: AdapterView<*>) {
+                // Nenhuma ação necessária se nada for selecionado
+            }
+        }
+
+// Quando a atividade for carregada, chame a função para configurar o Spinner de Planos
+        setupPlanosSpinner()
+
+// Quando a atividade for carregada, chame a função para carregar os clubes
         fetchClubes()
+
 
         // Configurar o OnClickListener para o TextView do registro
         binding.loginText.setOnClickListener {
@@ -183,6 +206,23 @@ class RegisterActivity : AppCompatActivity() {
                     // Guardar os IDs dos clubes no Spinner usando uma tag
                     binding.spinnerClube.tag = clubesMap
 
+                    // Configurar o listener para quando o usuário selecionar um clube
+                    binding.spinnerClube.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(parentView: AdapterView<*>, view: View?, position: Int, id: Long) {
+                            val selectedClubeName = parentView.getItemAtPosition(position) as String
+                            val clubeId = clubesMap[selectedClubeName]
+
+                            // Verifique se um clube foi selecionado (não é o "Escolha o seu clube")
+                            if (clubeId != null && selectedClubeName != "Escolha o seu clube") {
+                                fetchPlanosByClube(clubeId)  // Chama a função que buscará os planos
+                            }
+                        }
+
+                        override fun onNothingSelected(parentView: AdapterView<*>) {
+                            // Nada selecionado, ou pode adicionar uma ação
+                        }
+                    }
+
                 } catch (e: Exception) {
                     Log.e("RegisterActivity", "Erro ao processar resposta da API: ", e)
                     Toast.makeText(this, "Erro ao buscar clubes", Toast.LENGTH_SHORT).show()
@@ -197,7 +237,109 @@ class RegisterActivity : AppCompatActivity() {
         queue.add(jsonObjectRequest)
     }
 
+    // Função chamada para configurar o Spinner de Planos
+    private fun setupPlanosSpinner() {
+        // Cria uma lista inicial com o "Escolha o seu Plano"
+        val planosList = mutableListOf("Escolha o seu Plano")
 
+
+
+        // Criando o adapter e personalizando a cor e o tamanho do texto
+        val adapterPlanos = object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, planosList) {
+            // Alterando a cor do texto do item selecionado
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getView(position, convertView, parent)
+                val textView = view.findViewById<TextView>(android.R.id.text1)
+                textView.setTextColor(Color.parseColor("#000000")) // Cor preta
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f) // Tamanho da letra para 13sp
+                return view
+            }
+
+            // Alterando a cor do texto no dropdown (itens visíveis quando o Spinner é clicado)
+            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getDropDownView(position, convertView, parent)
+                val textView = view.findViewById<TextView>(android.R.id.text1)
+                textView.setTextColor(Color.parseColor("#000000")) // Cor preta
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f) // Tamanho da letra para 13sp
+                return view
+            }
+        }
+
+        // Atribui o adapter ao Spinner de Planos
+        binding.spinnerplanos.adapter = adapterPlanos
+    }
+
+    private fun fetchPlanosByClube(clubeId: Int) {
+        val queue = Volley.newRequestQueue(this)
+        val url = "https://esan-tesp-ds-paw.web.ua.pt/tesp-ds-g37/api/getplanosclube.php?clube_id=$clubeId" // URL da API que retorna os planos para um clube específico
+
+        val jsonObjectRequest = JsonObjectRequest(
+            Request.Method.GET, url, null,
+            { response ->
+                try {
+                    val planosArray = response.getJSONArray("planos")
+                    val planosList = mutableListOf<String>()
+                    val planosMap = mutableMapOf<String, Int>()  // Mapa para armazenar os planos com seus IDs
+
+                    // Adiciona o item de "placeholder" no começo da lista
+                    planosList.add("Escolha o seu Plano")
+
+                    // Preenche a lista com nome e preço dos planos
+                    for (i in 0 until planosArray.length()) {
+                        val plano = planosArray.getJSONObject(i)
+                        val idPlano = plano.getInt("id")
+                        val nomePlano = plano.getString("nome")
+                        val precoPlano = plano.getString("preco") // A chave para o preço pode variar, se necessário, ajuste conforme a resposta da API
+
+                        // Adiciona à lista o nome do plano seguido do preço
+                        planosList.add("$idPlano - $nomePlano - $precoPlano")
+                        planosMap[nomePlano] = idPlano
+                    }
+
+                    // Verificar se o mapa foi preenchido corretamente
+                    Log.d("RegisterActivity", "Mapa de planos: $planosMap")
+
+                    // Criando o adapter e personalizando a cor e o tamanho do texto
+                    val adapterPlanos = object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, planosList) {
+                        // Alterando a cor do texto do item selecionado
+                        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                            val view = super.getView(position, convertView, parent)
+                            val textView = view.findViewById<TextView>(android.R.id.text1)
+                            textView.setTextColor(Color.parseColor("#000000")) // Cor preta
+                            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f) // Tamanho da letra para 13sp
+                            return view
+                        }
+
+                        // Alterando a cor do texto no dropdown (itens visíveis quando o Spinner é clicado)
+                        override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                            val view = super.getDropDownView(position, convertView, parent)
+                            val textView = view.findViewById<TextView>(android.R.id.text1)
+                            textView.setTextColor(Color.parseColor("#000000")) // Cor preta
+                            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f) // Tamanho da letra para 13sp
+                            return view
+                        }
+                    }
+
+                    // Configurando o adapter no Spinner
+                    adapterPlanos.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    binding.spinnerplanos.adapter = adapterPlanos
+
+                    // Atribui o mapa de planos ao tag do Spinner
+                    binding.spinnerplanos.tag = planosMap
+
+                } catch (e: Exception) {
+                    Log.e("RegisterActivity", "Erro ao processar resposta da API para planos: ", e)
+                    Toast.makeText(this, "Erro ao buscar planos", Toast.LENGTH_SHORT).show()
+                }
+            },
+            { error ->
+                Log.e("RegisterActivity", "Erro na requisição da API para planos: ", error)
+                Toast.makeText(this, "Erro ao buscar planos: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        )
+
+        queue.add(jsonObjectRequest)
+    }
 
     fun doRegister(view: View) {
         val nome = binding.editTextNome.text.toString()
@@ -211,13 +353,24 @@ class RegisterActivity : AppCompatActivity() {
         val peso = binding.editTextPeso.text.toString()
         val clubeNome = binding.spinnerClube.selectedItem.toString()
         val clubesMap = binding.spinnerClube.tag as Map<String, Int>
+        val planosMap = binding.spinnerplanos.tag as Map<String, Int>
+
+        val planoNomeComPreco = binding.spinnerplanos.selectedItem.toString()
+        // Extraímos apenas o nome do plano, sem o preço
+        val planoNome = planoNomeComPreco.split(" - ")[1]  // Pega a segunda parte da string (nome do plano)
+
+        // Verificar o valor do nome do plano
+        Log.d("RegisterActivity", "Plano selecionado: $planoNome")
+
+        val planoId = planosMap[planoNome] ?: 0  // Obtém o ID do plano selecionado
         val clubeId = clubesMap[clubeNome] ?: 0 // Obtém o ID do clube selecionado
 
+
         // Log: Verificar dados do formulário
-        Log.d("RegisterActivity", "Dados do formulário: Nome=$nome, Email=$email, Telemovel=$telemovel, Data Nascimento=$dataNascimento, Genero=$genero, Altura=$altura, Peso=$peso, Clube=$clubeId")
+        Log.d("RegisterActivity", "Dados do formulário: Nome=$nome, Email=$email, Telemovel=$telemovel, Data Nascimento=$dataNascimento, Genero=$genero, Altura=$altura, Peso=$peso, Clube=$clubeId, Plano=$planoId")
 
         if (nome.isBlank() || email.isBlank() || telemovel.isBlank() || dataNascimento.isBlank() ||
-            genero.isBlank() || password.isBlank() || confirmPassword.isBlank() || altura.isBlank() || peso.isBlank() || clubeNome.isBlank()) {
+            genero.isBlank() || password.isBlank() || confirmPassword.isBlank() || altura.isBlank() || peso.isBlank() || clubeNome.isBlank() || planoNome.isBlank()) {
             Toast.makeText(this, "Por favor, preencha todos os campos", Toast.LENGTH_SHORT).show()
             return
         }
@@ -237,7 +390,8 @@ class RegisterActivity : AppCompatActivity() {
             "password" to password,
             "altura" to altura,
             "peso" to peso,
-            "clube_id" to clubeId.toString() // Adicionado o ID do clube
+            "clube_id" to clubeId.toString(), // Adicionado o ID do clube
+            "plano_id" to planoId.toString()  // Adicionado o ID do plano
         )
 
         // Log: Verificar conteúdo dos parâmetros
@@ -273,4 +427,5 @@ class RegisterActivity : AppCompatActivity() {
         // Adicionar a requisição à fila
         queue.add(multipartRequest)
     }
+
 }
