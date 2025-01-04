@@ -6,6 +6,7 @@ import android.R
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -24,6 +25,8 @@ import ua.goworkout.databinding.ActivityEditarPerfilBinding
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import org.json.JSONObject
+import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -197,15 +200,46 @@ class EditarPerfilActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
-            imageUri = data.data
-            // Carregar a imagem selecionada usando Glide com recorte circular
-            Glide.with(this)
-                .load(imageUri)
-                .apply(RequestOptions.circleCropTransform()) // Aplica o recorte circular
-                .into(binding.profileImage)
+
+        if (resultCode == RESULT_OK) {
+            when (requestCode) {
+                PICK_IMAGE_REQUEST -> {
+                    // Se for uma imagem da galeria
+                    imageUri = data?.data
+                    // Carregar a imagem selecionada usando Glide com recorte circular
+                    Glide.with(this)
+                        .load(imageUri)
+                        .apply(RequestOptions.circleCropTransform()) // Aplica o recorte circular
+                        .into(binding.profileImage)
+                }
+
+                CAMERA_REQUEST_CODE -> {
+                    // Se for uma imagem da câmera
+                    if (data != null && data.extras != null) {
+                        val photo = data.extras?.get("data") as Bitmap
+
+                        // Salvar a imagem tirada em um arquivo temporário
+                        val imageFile = File(cacheDir, "profile_image.jpg")
+                        val fileOutputStream = FileOutputStream(imageFile)
+                        photo.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
+                        fileOutputStream.flush()
+                        fileOutputStream.close()
+
+                        // Atualizar a imageUri com o caminho do arquivo temporário
+                        imageUri = Uri.fromFile(imageFile)
+
+                        // Carregar a foto tirada da câmera no ImageView
+                        Glide.with(this)
+                            .load(imageUri)
+                            .apply(RequestOptions.circleCropTransform()) // Aplica o recorte circular
+                            .into(binding.profileImage)
+                    }
+                }
+            }
         }
     }
+
+
 
 
     private fun atualizar() {
