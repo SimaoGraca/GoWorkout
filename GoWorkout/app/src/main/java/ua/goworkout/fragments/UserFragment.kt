@@ -22,6 +22,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.gson.Gson
 import org.json.JSONObject
@@ -89,7 +90,7 @@ class UserFragment : Fragment() {
         binding.gymInformation.text = "Clube: $clubeNome\nMorada: $endereco\nCidade: $cidade"
 
         // LOG - Verificando os dados recuperados de SharedPreferences
-        Log.d("UserFragment", "idUser: $idUser, Nome: $nome, Clube: $clubeNome, Clube_id: $id_clube, Cidade: $cidade")
+        Log.d("UserFragment", "idUser: $idUser, Nome: $nome,FOTO_PERFIL: $fotoPerfil, Clube: $clubeNome, Clube_id: $id_clube, Cidade: $cidade")
 
         // Horários de funcionamento - Recuperando os dados JSON do SharedPreferences
         val diasUteisJson = sharedPref?.getString("dias_uteis", "Não disponível")
@@ -145,7 +146,9 @@ class UserFragment : Fragment() {
             val imageUrl = "https://esan-tesp-ds-paw.web.ua.pt/tesp-ds-g37/uploads/imagem/$fotoPerfil"
             Glide.with(this)
                 .load(imageUrl)
-                .apply(RequestOptions.circleCropTransform()) // Aplica o recorte circular
+                .apply(RequestOptions.circleCropTransform())
+                .diskCacheStrategy(DiskCacheStrategy.NONE) // Ignora o cache no disco
+                .skipMemoryCache(true) // Ignora o cache na memória
                 .into(binding.profileImage)
         }
 

@@ -27,11 +27,7 @@
             android:layout_weight="1" />
 
         <!-- Bandeira do idioma (tamanho reduzido) -->
-        <ImageView
-            android:id="@+id/language_flag"
-            android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:src="@drawable/portuguese_flag" />
+
     </LinearLayout>
 
     <!-- Nome do cliente -->

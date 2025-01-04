@@ -34,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
             val clube_id = sharedPref.getString("clube_id", "")
 
             if (idUser != -1 && nome != null) {
-                // O usuário está logado, redireciona para a UserFragment
+                // O user está logado, redireciona para a UserFragment
                 val intent = Intent(this, UserFragment::class.java).apply {
                     putExtra("id_user", idUser)
                     putExtra("nome", nome)
@@ -89,12 +89,18 @@ class LoginActivity : AppCompatActivity() {
                         if (status == "OK") {
                             val idUser = response.getInt("id_user")
                             val nome = response.getString("nome")
+                            val genero = response.getString("genero")
+                            val email = response.getString("email")
+                            val peso = response.getString("peso")
+                            val telefone = response.getString("telefone")
+                            val altura = response.getString("altura")
                             val foto_perfil = response.getString("foto_perfil")
                             val clubenome = response.getString("clube_nome")
                             val clube_id = response.getString("clube_id")
                             val cor = response.getString("cor")
                             val cidade = response.getString("cidade")
                             val endereco = response.getString("endereco")
+                            val data_nascimento = response.getString("data_nascimento")
 
                             // Obter horários de funcionamento, verificando a existência de cada campo
                             val horarios = response.getJSONObject("horarios")
@@ -109,6 +115,12 @@ class LoginActivity : AppCompatActivity() {
                                 putBoolean("login", true)
                                 putInt("id_user", idUser)
                                 putString("nome", nome)
+                                putString("email", email)
+                                putString("genero", genero)
+                                putString("peso", peso)
+                                putString("telefone", telefone)
+                                putString("data_nascimento", data_nascimento)
+                                putString("altura", altura)
                                 putString("foto_perfil", foto_perfil)
                                 putString("clube_nome", clubenome)
                                 putString("clube_id", clube_id)

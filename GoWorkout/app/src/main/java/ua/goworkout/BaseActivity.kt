@@ -134,14 +134,9 @@ open class BaseActivity : AppCompatActivity() {
         val backArrow = headerView.findViewById<ImageView>(R.id.back_arrow)
         val nameClientTextView = headerView.findViewById<TextView>(R.id.client_name)
         nameClientTextView.text = nome
-        val languageFlag = headerView.findViewById<ImageView>(R.id.language_flag)
 
         backArrow.setOnClickListener {
             drawerLayout.closeDrawers()
-        }
-
-        languageFlag.setOnClickListener {
-            toggleLanguageFlag(languageFlag)
         }
 
         if (savedInstanceState == null) {
@@ -311,6 +306,12 @@ open class BaseActivity : AppCompatActivity() {
             putBoolean("login", false)
             remove("id_user")
             remove("nome")
+            remove("genero")
+            remove("email")
+            remove("peso")
+            remove("altura")
+            remove("telefone")
+            remove("data_nascimento")
             remove("clube_nome")
             remove("cidade")
             remove("endereco")

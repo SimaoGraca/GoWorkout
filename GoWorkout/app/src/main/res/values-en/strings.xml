@@ -4,6 +4,7 @@
     <string name="hint_password" translatable="false">Password</string>
     <string name="text_enter" translatable="false">Login</string>
     <string name="text_save">Save</string>
+    <string name="text_cancel">Cancel</string>
     <string name="text_welcome">Welcome,</string>
     <string name="drawer_open" translatable="false">Open Drawer</string>
     <string name="drawer_close" translatable="false">Close Drawer</string>
@@ -15,6 +16,8 @@
     <string name="text_horariofunc">Operating Hours</string>
     <string name="text_informacoesclube">Club Information</string>
     <string name="text_news">News</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_password">Change Password</string>
 
     <!-- Frases Motivacionais -->
     <string-array name="frases_motivacionais">

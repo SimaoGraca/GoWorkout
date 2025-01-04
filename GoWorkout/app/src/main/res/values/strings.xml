@@ -4,6 +4,7 @@
     <string name="hint_password">Password</string>
     <string name="text_enter">Login</string>
     <string name="text_save">Guardar</string>
+    <string name="text_cancel">Cancelar</string>
     <string name="text_welcome">Bem-Vindo(a),</string>
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
@@ -15,6 +16,8 @@
     <string name="text_horariofunc">Horário de Funcionamento</string>
     <string name="text_informacoesclube">Informações do seu clube</string>
     <string name="text_news">Noticias</string>
+    <string name="edit_profile">Editar Perfil</string>
+    <string name="change_password">Mudar Password</string>
 
     <!-- Frases Motivacionais -->
     <string-array name="frases_motivacionais">
