@@ -114,14 +114,9 @@ open class BaseActivity : AppCompatActivity() {
         // Configuração do NavigationView
         navView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_inicio -> {
-                    loadFragment(UserFragment())
-                    bottomNav.selectedItemId = R.id.nav_inicio
-                    true
-                }
                 R.id.nav_marcaraula -> {
                     loadFragment(MarcacaoFragment())
-                    bottomNav.selectedItemId = R.id.nav_marcaraula
+                    bottomNav.selectedItemId = R.id.nav_marcar
                     true
                 }
                 R.id.nav_perfil -> {
