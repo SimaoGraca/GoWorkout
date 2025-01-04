@@ -114,9 +114,23 @@ open class BaseActivity : AppCompatActivity() {
         // Configuração do NavigationView
         navView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
+                R.id.nav_inicio -> {
+                    loadFragment(UserFragment())
+                    bottomNav.selectedItemId = R.id.nav_inicio
+                    true
+                }
+                R.id.nav_marcaraula -> {
+                    loadFragment(MarcacaoFragment())
+                    bottomNav.selectedItemId = R.id.nav_marcaraula
+                    true
+                }
                 R.id.nav_perfil -> {
                     loadFragment(PerfilFragment())
                     bottomNav.selectedItemId = R.id.nav_perfil
+                    true
+                }
+                R.id.nav_changepassword -> {
+                    startActivity(Intent(this, EditarPasswordActivity::class.java))
                     true
                 }
                 R.id.nav_logout -> {

@@ -30,6 +30,7 @@ import java.util.Locale
 class EditarPerfilActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditarPerfilBinding
+    private val PICK_IMAGE_REQUEST = 1
     private val CAMERA_REQUEST_CODE = 1001
     private val GALLERY_REQUEST_CODE = 1002
     private val CAMERA_PERMISSION_REQUEST_CODE = 1003
@@ -145,7 +146,7 @@ class EditarPerfilActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
         } else {
-            openCamera() // Se já tiver permissão, abre a câmera
+            openCamera()
         }
     }
 
@@ -154,7 +155,7 @@ class EditarPerfilActivity : AppCompatActivity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), STORAGE_PERMISSION_REQUEST_CODE)
         } else {
-            openGallery() // Se já tiver permissão, abre a galeria
+            openGallery()
         }
     }
 
@@ -168,10 +169,9 @@ class EditarPerfilActivity : AppCompatActivity() {
         }
     }
 
-    // Abre a galeria
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, GALLERY_REQUEST_CODE)
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
     }
 
     // Trata os resultados das permissões
@@ -195,32 +195,18 @@ class EditarPerfilActivity : AppCompatActivity() {
         }
     }
 
-    // Lidar com o resultado da captura de imagem ou seleção da galeria
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            when (requestCode) {
-                CAMERA_REQUEST_CODE -> {
-                    imageUri = data?.data
-                    imageUri?.let {
-                        Glide.with(this)
-                            .load(it)
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(binding.profileImage)
-                    }
-                }
-                GALLERY_REQUEST_CODE -> {
-                    imageUri = data?.data
-                    imageUri?.let {
-                        Glide.with(this)
-                            .load(it)
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(binding.profileImage)
-                    }
-                }
-            }
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
+            imageUri = data.data
+            // Carregar a imagem selecionada usando Glide com recorte circular
+            Glide.with(this)
+                .load(imageUri)
+                .apply(RequestOptions.circleCropTransform()) // Aplica o recorte circular
+                .into(binding.profileImage)
         }
     }
+
 
     private fun atualizar() {
         val nome = binding.editName.text.toString()
@@ -327,8 +313,4 @@ class EditarPerfilActivity : AppCompatActivity() {
         // Adicionar a requisição na fila
         queue.add(multipartRequest)
     }
-
-
-
-
 }

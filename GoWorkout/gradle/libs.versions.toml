@@ -21,6 +21,7 @@ compiler = "3.2.0-alpha11"
 common = "0.10.0"
 junitJunit = "4.12"
 junitKtx = "1.2.1"
+uiGeometryAndroid = "1.7.6"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version = "1.13.1" }
@@ -44,6 +45,7 @@ androidx-compiler = { group = "androidx.databinding", name = "compiler", version
 common = { group = "com.google.ai.client.generativeai", name = "common", version.ref = "common" }
 junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
+androidx-ui-geometry-android = { group = "androidx.compose.ui", name = "ui-geometry-android", version.ref = "uiGeometryAndroid" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

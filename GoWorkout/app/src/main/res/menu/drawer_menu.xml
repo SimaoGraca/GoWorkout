@@ -2,12 +2,21 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_item_one"
-            android:title="Item One" />
+            android:id="@+id/nav_inicio"
+            android:title="Inicio"
+            android:icon="@drawable/ichome3"/>
+        <item
+            android:id="@+id/nav_marcaraula"
+            android:title="Marcar aula"
+            android:icon="@drawable/icmarcar1"/>
         <item
             android:id="@+id/nav_perfil"
             android:title="Perfil"
             android:icon="@drawable/ic_perfil"/>
+        <item
+            android:id="@+id/nav_changepassword"
+            android:title="Mudar Password"
+            android:icon="@drawable/padlock"/>
     </group>
     <item
         android:id="@+id/nav_logout"

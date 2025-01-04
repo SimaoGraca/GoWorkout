@@ -16,8 +16,8 @@
         <!-- Ícone de voltar -->
         <ImageView
             android:id="@+id/back_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:src="@drawable/ic_arrow_back" />
 
         <!-- Espaço entre os ícones -->
@@ -25,8 +25,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
-
-        <!-- Bandeira do idioma (tamanho reduzido) -->
 
     </LinearLayout>
 
@@ -36,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:text="Client Name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white"
+        android:textSize="15sp" />  <!-- Aumentado para 20sp -->
 </LinearLayout>

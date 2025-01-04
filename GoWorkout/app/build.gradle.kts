@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.common)
     implementation(libs.okhttp)
     implementation(libs.androidx.junit.ktx)
+    implementation(libs.androidx.ui.geometry.android)
     testImplementation(libs.junit.junit)
     androidTestImplementation(libs.junit.junit)
 
