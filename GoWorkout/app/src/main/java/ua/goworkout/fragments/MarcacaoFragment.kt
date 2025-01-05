@@ -2,8 +2,15 @@ package ua.goworkout.fragments
 
 import Aula
 import AulasAdapter
+import android.app.AlarmManager
+import android.app.AlertDialog
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +22,7 @@ import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
+import ua.goworkout.NotificationReceiver
 import ua.goworkout.databinding.FragmentMarcacoesBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -80,18 +88,37 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                 Toast.makeText(context, "ID do clube inválido", Toast.LENGTH_SHORT).show()
             }
         } else {
-            Toast.makeText(context, "Usuário ou clube inválido", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "User ou clube inválido", Toast.LENGTH_SHORT).show()
         }
     }
 
 
     private fun updateCurrentDate() {
-        val sdf = SimpleDateFormat("EEEE, dd 'de' MMMM", Locale("pt", "PT"))
+        // Verificar o idioma atual do dispositivo
+        val locale = Locale.getDefault()
+
+        // Definir o formato da data com base no idioma
+        val sdf = if (locale.language == "en") {
+            // Se o idioma for inglês
+            SimpleDateFormat("EEEE, dd 'of' MMMM", Locale("en", "US"))
+        } else {
+            // Se o idioma for português (ou outro)
+            SimpleDateFormat("EEEE, dd 'de' MMMM", Locale("pt", "PT"))
+        }
+
+        // Formatando a data
         val formattedDate = sdf.format(currentCalendar.time)
+
+        // Dividir o nome do dia da data para capitalizar a primeira letra
         val formattedDay = formattedDate.split(",")[0].trim().replaceFirstChar { it.titlecase(Locale.getDefault()) }
+
+        // Combinar o nome do dia com o resto da data
         val formattedFinalDate = formattedDay + formattedDate.substring(formattedDay.length)
+
+        // Exibir a data formatada no TextView
         binding.tvDayDate.text = formattedFinalDate
     }
+
 
     private fun getAulasDisponiveis(userId: Int, clubeId: Int) {
         val queue = Volley.newRequestQueue(requireContext())
@@ -119,7 +146,8 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                         val horario = aula.getString("DATA_AULA")
                         val instrutor_nome = aula.getString("instrutor_nome")
                         val duracao = aula.getInt("DURACAO")
-                        aulasList.add(Aula(id_aula, id_user, nomeCategoria, horario, instrutor_nome, duracao, false))
+                        val corcategoria = aula.getString("cor_categoria")
+                        aulasList.add(Aula(id_aula, id_user, nomeCategoria, horario, instrutor_nome, duracao,corcategoria, false))
                     }
 
                     // Armazenar todas as aulas para uso posterior
@@ -175,13 +203,13 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
         if (!jsonString.isNullOrEmpty()) {
             val jsonMarcacoes = JSONObject(jsonString)
 
-            // Recuperar o ID do usuário armazenado
+            // Recuperar o ID do user armazenado
             val storedUserId = jsonMarcacoes.optInt("id_user", -1)
 
-            // Recuperar o ID do usuário atualmente logado do SharedPreferences "pmLogin"
+            // Recuperar o ID do user atualmente logado do SharedPreferences "pmLogin"
             val currentUserId = activity?.getSharedPreferences("pmLogin", Context.MODE_PRIVATE)?.getInt("id_user", -1)
 
-            // Verificar se o ID do usuário armazenado é igual ao ID do usuário logado
+            // Verificar se o ID do user armazenado é igual ao ID do usuário logado
             if (storedUserId == currentUserId) {
                 for (key in jsonMarcacoes.keys()) {
                     if (key != "id_user") {
@@ -204,7 +232,7 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
             jsonMarcacoes.put(aulaId.toString(), idMarcacao)
         }
 
-        // Adicionar o ID do usuário ao JSON
+        // Adicionar o ID do user ao JSON
         jsonMarcacoes.put("id_user", userId)
 
         editor.putString("marcacoes", jsonMarcacoes.toString())
@@ -216,18 +244,37 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
         // Encontrar a aula correspondente
         val aula = todasAulas.find { it.id_aula == aulaId }
         if (aula != null) {
-            // Obter a data da aula
-            val aulaDateStr = aula.horario.split(" ")[0] // 'yyyy-MM-dd'
+            try {
+                // Formatar o horário da aula e o horário atual
+                val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                val aulaDateTime = dateTimeFormat.parse(aula.horario) // Horário da aula
+                val currentDateTime = Date() // Data e hora atual
 
-            // Formatar a data de hoje
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val currentDate = dateFormat.format(Date())
+                Log.d("MarcacaoFragment", "Horário da aula: $aulaDateTime")
+                Log.d("MarcacaoFragment", "Horário atual: $currentDateTime")
 
-            // Verificar se a aula já passou
-            if (aulaDateStr < currentDate) {
-                // Exibir mensagem de erro se a aula já passou
-                Toast.makeText(context, "Esta aula já não está disponível para marcação", Toast.LENGTH_SHORT).show()
-                return // Não continua com a marcação
+                // Verificar se a aula já passou
+                if (aulaDateTime != null && aulaDateTime.before(currentDateTime)) {
+                    // A aula já passou, então não pode ser marcada ou desmarcada
+                    if (isMarked) {
+                        // Tentando marcar uma aula que já passou
+                        Log.d("MarcacaoFragment", "A aula já passou. Não pode ser marcada.")
+                        Toast.makeText(context, "Esta aula já não pode ser marcada", Toast.LENGTH_SHORT).show()
+                        aula.isMarked = false
+                    } else {
+                        // Tentando desmarcar uma aula que já passou
+                        Log.d("MarcacaoFragment", "A aula já passou. Não pode ser desmarcada.")
+                        Toast.makeText(context, "Esta aula já não pode ser desmarcada", Toast.LENGTH_SHORT).show()
+                        aula.isMarked = true
+                    }
+                    return
+                } else {
+                    Log.d("MarcacaoFragment", "A aula está disponível para marcação/desmarcação.")
+                }
+            } catch (e: Exception) {
+                Log.e("MarcacaoFragment", "Erro ao processar a data e hora da aula: ${e.message}", e)
+                Toast.makeText(context, "Erro ao verificar a data e hora da aula", Toast.LENGTH_SHORT).show()
+                return
             }
 
             // Caso contrário, prosseguir com a lógica original de marcação
@@ -271,19 +318,94 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                     Log.d("MarcacaoFragment", "Resposta recebida da API: $response")
 
                     if (isMarked) {
+                        // Chama a função para verificar a permissão antes de agendar
+                        checkAndRequestNotificationPermission()
+
                         val id = response.optInt("id_marcacao", -1)
                         if (id != -1) {
+                            // Atualiza o estado da aula diretamente na lista
+                            aula.isMarked = true
                             marcacoesMap[aulaId] = id
                             Log.d("MarcacaoFragment", "ID da marcação recebida: $id") // Log do id da marcação
                             saveMarcacoesToPreferences(userId) // Salva no SharedPreferences
+
+                            // Notifica o adaptador para atualizar o item específico
+                            val position = todasAulas.indexOf(aula)
+                            if (position >= 0) {
+                                aulasAdapter.notifyItemChanged(position) // Atualiza o item específico na RecyclerView
+                            }
+
+                            // Calcular o horário da notificação (1 hora antes da aula)
+                            val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                            dateTimeFormat.timeZone = TimeZone.getDefault()
+                            val aulaDateTime = dateTimeFormat.parse(aula.horario)
+                            val notificationTime = aulaDateTime.time - 3600000 // 1 hora antes (em milissegundos)
+
+                            // Log da hora agendada
+                            val notificationTimeFormatted = dateTimeFormat.format(Date(notificationTime))
+                            Log.d("MarcacaoFragment", "Notificação agendada para 1 hora antes: $notificationTimeFormatted")
+
+                            // Agendar o alarme
+                            val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                            val intent = Intent(context, NotificationReceiver::class.java).apply {
+                                putExtra("nome_aula", aula.nomeCategoria) // Nome da aula
+                                putExtra("horario_aula", aula.horario) // Horário da aula
+                            }
+
+                            val pendingIntent = PendingIntent.getBroadcast(
+                                context,
+                                aulaId, // Use o ID da aula como requestCode
+                                intent,
+                                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                            )
+
+                            // Garantir que o alarme seja acionado mesmo em modo de economia de bateria
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                alarmManager.setExactAndAllowWhileIdle(
+                                    AlarmManager.RTC_WAKEUP,
+                                    notificationTime,
+                                    pendingIntent
+                                )
+                            } else {
+                                alarmManager.setExact(
+                                    AlarmManager.RTC_WAKEUP,
+                                    notificationTime,
+                                    pendingIntent
+                                )
+                            }
+
+
                         } else {
                             Log.d("MarcacaoFragment", "ID da marcação não recebido ou inválido")
                         }
                     } else {
                         val removedId = marcacoesMap.remove(aulaId)
+                        aula.isMarked = false
                         Log.d("MarcacaoFragment", "Aula desmarcada. ID da marcação removido: $removedId") // Log da remoção
                         saveMarcacoesToPreferences(userId) // Salva no SharedPreferences
+
+                        // Notifica o adaptador para atualizar o item específico
+                        val position = todasAulas.indexOf(aula)
+                        if (position >= 0) {
+                            aulasAdapter.notifyItemChanged(position) // Atualiza o item específico na RecyclerView
+                        }
+
+                        // Cancelar a notificação ao desmarcar
+                        val intent = Intent(context, NotificationReceiver::class.java)
+                        val pendingIntent = PendingIntent.getBroadcast(
+                            context,
+                            aulaId,
+                            intent,
+                            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                        )
+
+                        val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+                        // Cancelar o alarme
+                        alarmManager.cancel(pendingIntent)
+                        Log.d("MarcacaoFragment", "Notificação cancelada para a aula: $aulaId")
                     }
+
 
                     Toast.makeText(context, "Operação realizada com sucesso", Toast.LENGTH_SHORT).show()
                 },
@@ -300,6 +422,37 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
         }
     }
 
+    fun checkAndRequestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            if (!notificationManager.areNotificationsEnabled()) {
+                // Se a permissão não foi concedida, solicitar
+                showPermissionRequestDialog()
+            } else {
+                Log.d("MarcacaoFragment", "Permissão para notificações já concedida.")
+            }
+        } else {
+            // No Android < 13, a permissão é concedida automaticamente
+            Log.d("MarcacaoFragment", "Permissão para notificações não é necessária.")
+        }
+    }
+
+    fun showPermissionRequestDialog() {
+        AlertDialog.Builder(context)
+            .setTitle("Permissão para Notificações")
+            .setMessage("Gostaria de receber notificações para a sua aula?")
+            .setPositiveButton("Sim") { _, _ ->
+                // Leva o usuário para as configurações de permissão
+                val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE, context?.packageName)
+                startActivity(intent)
+            }
+            .setNegativeButton("Não") { dialog, _ ->
+                dialog.dismiss()
+                Log.d("MarcacaoFragment", "Usuário recusou a permissão para notificações.")
+            }
+            .show()
+    }
 
 
     override fun onDestroyView() {

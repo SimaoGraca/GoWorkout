@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_marginStart="16dp"
-            android:text="Deixe feedback ao clube"
+            android:text="@string/feedbackclube"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -120,10 +120,10 @@
                 <EditText
                     android:id="@+id/feedback_message"
                     android:layout_width="356dp"
-                    android:layout_height="94dp"
+                    android:layout_height="75dp"
                     android:background="#1e1e1e"
                     android:gravity="top"
-                    android:hint="Deixe seu feedback..."
+                    android:hint="@string/feedbacktext"
                     android:padding="8dp"
                     android:scrollbars="vertical"
                     android:textColor="@android:color/white" />
@@ -135,7 +135,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_gravity="center"
-                    android:text="Enviar"
+                    android:text="@string/text_invite"
                     android:backgroundTint="@color/black"
                     android:textColor="@android:color/white" />
             </LinearLayout>

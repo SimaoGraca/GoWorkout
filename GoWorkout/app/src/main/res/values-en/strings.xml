@@ -1,9 +1,16 @@
 <resources>
     <string name="app_name">GoWorkout</string>
     <string name="hint_email" translatable="false">Email</string>
+    <string name="text_name">Name</string>
+    <string name="text_mobile">Mobile</string>
+    <string name="text_date">Date of Birth</string>
+    <string name="text_gen">Gender</string>
+    <string name="text_peso">Weight (kg)</string>
+    <string name="text_altura">Height (cm)</string>
     <string name="hint_password" translatable="false">Password</string>
     <string name="text_enter" translatable="false">Login</string>
     <string name="text_save">Save</string>
+    <string name="text_invite">Send</string>
     <string name="text_cancel">Cancel</string>
     <string name="text_welcome">Welcome,</string>
     <string name="drawer_open" translatable="false">Open Drawer</string>
@@ -18,6 +25,21 @@
     <string name="text_news">News</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="change_password">Change Password</string>
+    <string name="text_passwordatual">Current Password</string>
+    <string name="text_passwordnova">New Password</string>
+    <string name="text_passwordnovaconfirm">Confirm New Password</string>
+    <string name="feedbackclube">Leave feedback for the club</string>
+    <string name="feedbacktext">Leave your feedback...</string>
+    <string name="text_club">Club</string>
+    <string name="text_morada">Address</string>
+    <string name="text_city">City</string>
+    <string name="text_diasuteis">Weekdays</string>
+    <string name="text_sabado">Saturday</string>
+    <string name="text_domingo">Sunday</string>
+    <string name="text_feriado">Holiday</string>
+    <string name="text_fechado">Closed</string>
+    <string name="text_instrutor">Instructor</string>
+
 
     <!-- Frases Motivacionais -->
     <string-array name="frases_motivacionais">

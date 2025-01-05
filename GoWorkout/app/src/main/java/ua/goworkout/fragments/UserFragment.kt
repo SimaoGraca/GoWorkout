@@ -87,7 +87,10 @@ class UserFragment : Fragment() {
         }
 
         // Informações do ginásio
-        binding.gymInformation.text = "Clube: $clubeNome\nMorada: $endereco\nCidade: $cidade"
+        binding.gymInformation.text = getString(R.string.text_club) + ": $clubeNome\n" +
+                getString(R.string.text_morada) + ": $endereco\n" +
+                getString(R.string.text_city) + ": $cidade"
+
 
         // LOG - Verificando os dados recuperados de SharedPreferences
         Log.d("UserFragment", "idUser: $idUser, Nome: $nome,FOTO_PERFIL: $fotoPerfil, Clube: $clubeNome, Clube_id: $id_clube, Cidade: $cidade")
@@ -107,28 +110,31 @@ class UserFragment : Fragment() {
 
         // Formatar os horários para exibição
         val diasUteisFormatted = if (horarioDiasUteis.aberto == 1) {
-            "Dias Úteis: ${formatHora(horarioDiasUteis.horario_abertura)} - ${formatHora(horarioDiasUteis.horario_fecho)}"
+            "${getString(R.string.text_diasuteis)}: ${formatHora(horarioDiasUteis.horario_abertura)} - ${formatHora(horarioDiasUteis.horario_fecho)}"
         } else {
-            "Dias Úteis: Não disponível"
+            "${getString(R.string.text_diasuteis)}: ${getString(R.string.text_fechado)}"
         }
 
+
+        // Formatar os horários para exibição
         val sabadoFormatted = if (horarioSabado.aberto == 1) {
-            "Sábado: ${formatHora(horarioSabado.horario_abertura)} - ${formatHora(horarioSabado.horario_fecho)}"
+            "${getString(R.string.text_sabado)}: ${formatHora(horarioSabado.horario_abertura)} - ${formatHora(horarioSabado.horario_fecho)}"
         } else {
-            "Sábado: Não disponível"
+            "${getString(R.string.text_sabado)}: ${getString(R.string.text_fechado)}"
         }
 
         val domingoFormatted = if (horarioDomingo.aberto == 1) {
-            "Domingo: ${formatHora(horarioDomingo.horario_abertura)} - ${formatHora(horarioDomingo.horario_fecho)}"
+            "${getString(R.string.text_domingo)}: ${formatHora(horarioDomingo.horario_abertura)} - ${formatHora(horarioDomingo.horario_fecho)}"
         } else {
-            "Domingo: Fechado"
+            "${getString(R.string.text_domingo)}: ${getString(R.string.text_fechado)}"
         }
 
         val feriadoFormatted = if (horarioFeriado.aberto == 1) {
-            "Feriado: ${formatHora(horarioFeriado.horario_abertura)} - ${formatHora(horarioFeriado.horario_fecho)}"
+            "${getString(R.string.text_feriado)}: ${formatHora(horarioFeriado.horario_abertura)} - ${formatHora(horarioFeriado.horario_fecho)}"
         } else {
-            "Feriado: Não disponível"
+            "${getString(R.string.text_feriado)}: ${getString(R.string.text_fechado)}"
         }
+
 
         // Atualizar a interface com os horários formatados
         binding.gymhorarioInformation.text = """

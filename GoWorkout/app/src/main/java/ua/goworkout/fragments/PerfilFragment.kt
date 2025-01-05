@@ -85,7 +85,7 @@ class PerfilFragment : Fragment() {
         }
 
         // Ocultar a Bottom Navigation quando o campo de feedback (EditText) receber o foco
-        feedbackMessage.setOnFocusChangeListener { v, hasFocus ->
+        feedbackMessage.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 bottomNav.visibility = View.GONE // Ocultar Bottom Navigation
             }
@@ -95,6 +95,10 @@ class PerfilFragment : Fragment() {
         binding.root.setOnTouchListener { _, _ ->
             val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0) // Fecha o teclado
+
+            // Restaurar a Bottom Navigation quando o teclado for fechado
+            bottomNav.visibility = View.VISIBLE
+
             false // Retorna falso para que o toque possa ser propagado para outros elementos
         }
 
@@ -109,8 +113,6 @@ class PerfilFragment : Fragment() {
             true // Retorna verdadeiro para continuar a renderização
         }
     }
-
-
 
     private fun submitFeedback(userId: String, rating: Float, feedback: String, clubeId: String) {
         val url = "https://esan-tesp-ds-paw.web.ua.pt/tesp-ds-g37/api/submitFeedbackclube.php"
@@ -131,9 +133,16 @@ class PerfilFragment : Fragment() {
                 try {
                     Log.d("FeedbackResponse", "Response: $response")
                     Toast.makeText(requireContext(), "Obrigado pelo seu feedback!", Toast.LENGTH_SHORT).show()
+
+                    // Restaurar a Bottom Navigation após o envio do feedback
+                    bottomNav.visibility = View.VISIBLE
+
                 } catch (e: JSONException) {
                     Log.e("FeedbackError", "Erro ao processar JSON da resposta: ${e.message}")
                     Toast.makeText(requireContext(), "Erro ao processar resposta", Toast.LENGTH_SHORT).show()
+
+                    // Restaurar a Bottom Navigation em caso de erro
+                    bottomNav.visibility = View.VISIBLE
                 }
             },
             { error ->
@@ -143,6 +152,9 @@ class PerfilFragment : Fragment() {
                     Log.e("FeedbackError", "Error Body: ${String(error.networkResponse.data)}")
                 }
                 Toast.makeText(requireContext(), "Erro ao enviar feedback", Toast.LENGTH_SHORT).show()
+
+                // Restaurar a Bottom Navigation em caso de erro
+                bottomNav.visibility = View.VISIBLE
             }
         )
 

@@ -3,7 +3,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_marcaraula"
-            android:title="Marcar aula"
+            android:title="@string/aulas"
             android:icon="@drawable/icmarcar1"/>
         <item
             android:id="@+id/nav_perfil"
@@ -11,7 +11,7 @@
             android:icon="@drawable/ic_perfil"/>
         <item
             android:id="@+id/nav_changepassword"
-            android:title="Mudar Password"
+            android:title="@string/change_password"
             android:icon="@drawable/padlock"/>
     </group>
     <item

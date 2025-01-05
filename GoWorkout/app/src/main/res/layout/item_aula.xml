@@ -1,74 +1,87 @@
-<!-- item_aula.xml -->
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/information_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="12dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="12dp"
+    android:backgroundTint="#1e1e1e"
     app:cardCornerRadius="16dp"
     app:cardElevation="4dp"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="12dp"
-    android:backgroundTint="#1e1e1e">
+    app:layout_constraintStart_toStartOf="parent">
 
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="16dp">
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/vertical_line"
+            android:layout_width="8dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/white" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="12dp">
 
-            <TextView
-                android:id="@+id/tvNomeCategoria"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Nome da Categoria"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvHorario"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Horário"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/tvNomeCategoria"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nome da Categoria"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvInstrutor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Instrutor"
-                android:textColor="@android:color/white"
-                android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/tvHorario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Horário"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvInstrutor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Instrutor"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/btnCheck"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/circle_check_marked"
+                android:contentDescription="Botão de check" />
+
+            <ImageButton
+                android:id="@+id/btnUncheck"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/circle_uncheck_marked"
+                android:contentDescription="Botão de uncheck"
+                android:visibility="gone" /> <!-- Inicialmente oculto -->
         </LinearLayout>
-
-        <ImageButton
-            android:id="@+id/btnCheck"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"
-            android:background="@drawable/circle_check_marked"
-            android:contentDescription="Botão de check" />
-
-
-        <ImageButton
-            android:id="@+id/btnUncheck"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"
-            android:background="@drawable/circle_uncheck_marked"
-            android:contentDescription="Botão de uncheck"
-            android:visibility="gone" /> <!-- Initially hidden -->
     </LinearLayout>
 </androidx.cardview.widget.CardView>

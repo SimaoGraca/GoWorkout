@@ -1,8 +1,11 @@
+import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.content.ContextCompat.getString
 import androidx.recyclerview.widget.RecyclerView
 import ua.goworkout.R
 import java.text.SimpleDateFormat
@@ -15,6 +18,7 @@ data class Aula(
     val horario: String,
     val instrutor_nome: String,
     val duracao: Int,
+    val cor: String,
     var isMarked: Boolean
 )
 
@@ -32,6 +36,7 @@ class AulasAdapter(
         val instrutorTextView: TextView = itemView.findViewById(R.id.tvInstrutor)
         val buttonMarcar: ImageButton = itemView.findViewById(R.id.btnCheck)
         val buttonDesmarcar: ImageButton = itemView.findViewById(R.id.btnUncheck)
+        val linhacor: View = itemView.findViewById(R.id.vertical_line)
     }
 
     class EmptyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -52,6 +57,7 @@ class AulasAdapter(
         }
     }
 
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (getItemViewType(position) == VIEW_TYPE_AULA) {
             val aula = aulasList!![position]
@@ -65,42 +71,52 @@ class AulasAdapter(
             // Formatar a duração
             val formattedDuracao = "${aula.duracao}'"
 
-            // Atualizar os TextViews
+            // Acesse o contexto diretamente através do holder (ViewHolder)
             val aulaHolder = holder as AulaViewHolder
+            val context = aulaHolder.itemView.context // Contexto do itemView dentro do ViewHolder
+
+            // Atualizar os TextViews
             aulaHolder.nomeCategoriaTextView.text = aula.nomeCategoria
             aulaHolder.horarioDuracaoTextView.text = "$formattedHorario | $formattedDuracao"
-            aulaHolder.instrutorTextView.text = "Instrutor: ${aula.instrutor_nome}"
+            // Aqui usamos context.getString() para acessar o texto
+            aulaHolder.instrutorTextView.text = "${context.getString(R.string.text_instrutor)}: ${aula.instrutor_nome}"
 
-            // Verificar se a aula já passou
-            val aulaDateStr = aula.horario.split(" ")[0] // 'yyyy-MM-dd'
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val currentDate = dateFormat.format(Date())
-            val isPast = aulaDateStr < currentDate
+            try {
+                val corLinha = Color.parseColor(aula.cor) // Conversão da string hexadecimal para cor
+                aulaHolder.linhacor.setBackgroundColor(corLinha)
+            } catch (e: IllegalArgumentException) {
+                aulaHolder.linhacor.setBackgroundColor(Color.GRAY) // Cor padrão em caso de erro
+            }
 
-            // Atualizar visibilidade dos botões
+            aulaHolder.buttonMarcar.setOnClickListener {
+                // Atualiza o estado de 'isMarked' da aula
+                aula.isMarked = true
+
+                // Chama o listener para fazer a operação de marcação
+                listener.onAulaCheckClick(aula.id_aula, aula.userId, true)
+
+                // Notifica o RecyclerView para atualizar o item da aula específico
+                notifyItemChanged(position)
+            }
+
+            aulaHolder.buttonDesmarcar.setOnClickListener {
+                // Atualiza o estado de 'isMarked' da aula
+                aula.isMarked = false
+
+                // Chama o listener para fazer a operação de desmarcação
+                listener.onAulaCheckClick(aula.id_aula, aula.userId, false)
+
+                // Notifica o RecyclerView para atualizar o item da aula específico
+                notifyItemChanged(position)
+            }
+
+            // Atualizar visibilidade dos botões com base no valor de 'isMarked'
             if (aula.isMarked) {
                 aulaHolder.buttonMarcar.visibility = View.GONE
                 aulaHolder.buttonDesmarcar.visibility = View.VISIBLE
             } else {
                 aulaHolder.buttonMarcar.visibility = View.VISIBLE
                 aulaHolder.buttonDesmarcar.visibility = View.GONE
-            }
-
-            // Adicionar listeners aos botões
-            aulaHolder.buttonMarcar.setOnClickListener {
-                if (!isPast) {
-                    aula.isMarked = true
-                    listener.onAulaCheckClick(aula.id_aula, aula.userId, true)
-                    notifyItemChanged(position)
-                }
-            }
-
-            aulaHolder.buttonDesmarcar.setOnClickListener {
-                if (!isPast) {
-                    aula.isMarked = false
-                    listener.onAulaCheckClick(aula.id_aula, aula.userId, false)
-                    notifyItemChanged(position)
-                }
             }
         } else {
             // Mostrar a mensagem "Não existe aulas para esse dia"

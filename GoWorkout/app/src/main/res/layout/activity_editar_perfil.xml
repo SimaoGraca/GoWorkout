@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EditarPerfilActivity">
+    tools:context=".EditarPerfilActivity"
+    android:background="@android:color/black">
 
     <!-- Linha superior com a seta e o título -->
     <ImageView
@@ -46,7 +47,7 @@
         android:id="@+id/profile_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="64dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/circle_background"
         android:contentDescription="Imagem de perfil"
@@ -60,14 +61,16 @@
         android:id="@+id/name_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:text="Nome:"
+        android:text="@string/text_name"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/profile_image"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/edit_name"
         app:layout_constraintEnd_toStartOf="@+id/edit_name"
-        app:layout_constraintWidth_percent="0.2"
-        app:layout_constraintBaseline_toBaselineOf="@id/edit_name" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_image"
+        app:layout_constraintWidth_percent="0.2" />
 
     <!-- Campo de nome -->
     <EditText
@@ -76,9 +79,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Digite o seu nome"
+        android:layout_marginEnd="140dp"
         android:inputType="textPersonName"
+        android:backgroundTint="@android:color/white"
         android:padding="12dp"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -91,14 +94,16 @@
         android:id="@+id/email_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:text="Email:"
+        android:text="Email"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/edit_name"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/edit_email"
         app:layout_constraintEnd_toStartOf="@+id/edit_email"
-        app:layout_constraintWidth_percent="0.2"
-        app:layout_constraintBaseline_toBaselineOf="@id/edit_email" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_name"
+        app:layout_constraintWidth_percent="0.2" />
 
     <!-- Campo de email -->
     <EditText
@@ -106,14 +111,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Digite o seu email"
-        android:padding="12dp"
+        android:layout_marginEnd="64dp"
         android:inputType="textEmailAddress"
+        android:backgroundTint="@android:color/white"
+        android:padding="12dp"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/edit_name"
-        app:layout_constraintStart_toEndOf="@id/email_label"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/email_label"
+        app:layout_constraintTop_toBottomOf="@id/edit_name"
         app:layout_constraintWidth_percent="0.6" />
 
     <!-- Texto Telefone -->
@@ -121,14 +126,16 @@
         android:id="@+id/phone_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:text="Telefone:"
+        android:text="@string/text_mobile"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/edit_email"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/edit_phone"
         app:layout_constraintEnd_toStartOf="@+id/edit_phone"
-        app:layout_constraintWidth_percent="0.2"
-        app:layout_constraintBaseline_toBaselineOf="@id/edit_phone" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_email"
+        app:layout_constraintWidth_percent="0.2" />
 
     <!-- Campo Telefone -->
     <EditText
@@ -136,14 +143,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Digite o seu telefone"
+        android:layout_marginEnd="64dp"
+        android:backgroundTint="@android:color/white"
         android:inputType="phone"
         android:padding="12dp"
         android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/phone_label"
         app:layout_constraintTop_toBottomOf="@id/edit_email"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.6" />
 
     <!-- Texto Data de Nascimento -->
@@ -151,14 +158,16 @@
         android:id="@+id/dob_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:text="Data de Nascimento:"
+        android:text="@string/text_date"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/edit_phone"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/edit_dob"
         app:layout_constraintEnd_toStartOf="@+id/edit_dob"
-        app:layout_constraintWidth_percent="0.2"
-        app:layout_constraintBaseline_toBaselineOf="@id/edit_dob" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_phone"
+        app:layout_constraintWidth_percent="0.2" />
 
     <!-- Campo Data de Nascimento -->
     <EditText
@@ -166,14 +175,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        android:hint="DD/MM/AAAA"
+        android:layout_marginEnd="64dp"
+        android:backgroundTint="@android:color/white"
         android:inputType="date"
         android:padding="12dp"
         android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/dob_label"
         app:layout_constraintTop_toBottomOf="@id/edit_phone"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.6" />
 
     <!-- Texto Género -->
@@ -181,14 +190,16 @@
         android:id="@+id/gender_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:text="Género:"
+        android:text="@string/text_gen"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/edit_dob"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/edit_gender"
         app:layout_constraintEnd_toStartOf="@+id/edit_gender"
-        app:layout_constraintWidth_percent="0.2"
-        app:layout_constraintBaseline_toBaselineOf="@id/edit_gender" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_dob"
+        app:layout_constraintWidth_percent="0.2" />
 
     <!-- Campo Género -->
     <Spinner
@@ -196,11 +207,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="64dp"
         android:padding="12dp"
+        android:backgroundTint="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/gender_label"
         app:layout_constraintTop_toBottomOf="@id/edit_dob"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.6" />
 
     <!-- Texto Peso -->
@@ -208,14 +220,16 @@
         android:id="@+id/weight_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:text="Peso (kg):"
+        android:text="@string/text_peso"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/edit_gender"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/edit_weight"
         app:layout_constraintEnd_toStartOf="@+id/edit_weight"
-        app:layout_constraintWidth_percent="0.2"
-        app:layout_constraintBaseline_toBaselineOf="@id/edit_weight" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_gender"
+        app:layout_constraintWidth_percent="0.2" />
 
     <!-- Campo Peso -->
     <EditText
@@ -223,14 +237,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Digite o peso"
+        android:layout_marginEnd="64dp"
         android:inputType="numberDecimal"
+        android:backgroundTint="@android:color/white"
         android:padding="12dp"
         android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/weight_label"
         app:layout_constraintTop_toBottomOf="@id/edit_gender"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.6" />
 
     <!-- Texto Altura -->
@@ -238,14 +252,16 @@
         android:id="@+id/height_label"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:text="Altura (cm):"
+        android:text="@string/text_altura"
+        android:textColor="@android:color/white"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/edit_weight"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBaseline_toBaselineOf="@id/edit_height"
         app:layout_constraintEnd_toStartOf="@+id/edit_height"
-        app:layout_constraintWidth_percent="0.2"
-        app:layout_constraintBaseline_toBaselineOf="@id/edit_height" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_weight"
+        app:layout_constraintWidth_percent="0.2" />
 
     <!-- Campo Altura -->
     <EditText
@@ -253,46 +269,49 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Digite a altura"
+        android:layout_marginEnd="64dp"
         android:inputType="numberDecimal"
         android:padding="12dp"
         android:textSize="16sp"
+        android:backgroundTint="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/height_label"
         app:layout_constraintTop_toBottomOf="@id/edit_weight"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent="0.6" />
 
     <!-- Botões de Salvar e Cancelar -->
 
-    <!-- Botões de Salvar e Cancelar -->
     <Button
         android:id="@+id/save_button"
-        android:layout_width="0dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="6dp"
+        android:backgroundTint="#1e1e1e"
+        android:padding="12dp"
         android:text="@string/text_save"
         android:textColor="@android:color/white"
-        android:padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/edit_height"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/cancel_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_height"
         app:layout_constraintWidth_percent="0.4" />
 
     <Button
         android:id="@+id/cancel_button"
-        android:layout_width="0dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="50dp"
+        android:backgroundTint="#1e1e1e"
+        android:padding="12dp"
         android:text="@string/text_cancel"
         android:textColor="@android:color/white"
-        android:padding="12dp"
-        android:backgroundTint="@android:color/darker_gray"
-        app:layout_constraintTop_toBottomOf="@id/edit_height"
-        app:layout_constraintStart_toEndOf="@id/save_button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/save_button"
+        app:layout_constraintTop_toBottomOf="@id/edit_height"
         app:layout_constraintWidth_percent="0.4" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
