@@ -68,6 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@android:color/white"
+            android:textColor="@android:color/white"
             android:hint="@string/feedbacktext"
             android:inputType="textMultiLine"
             android:layout_marginBottom="8dp" />

@@ -1,15 +1,12 @@
 package ua.goworkout
-import android.app.Notification
+
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.core.text.HtmlCompat
-import ua.goworkout.R
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -40,22 +37,26 @@ class NotificationReceiver : BroadcastReceiver() {
                 "AULA_NOTIFICATION_CHANNEL", // ID do canal
                 "Aulas Marcadas", // Nome do canal
                 NotificationManager.IMPORTANCE_HIGH
-            )
+            ).apply {
+                description = "Notificações para lembrar aulas marcadas"
+            }
             notificationManager.createNotificationChannel(channel)
         }
 
-        val formattedText = "Tem uma aula de $nomeAula marcada para hoje\nàs $formattedTime horas"
+        // Texto formatado para a notificação
+        val formattedText = "Tem uma aula de $nomeAula marcada para hoje às $formattedTime horas"
 
+        // Configuração da notificação
         val notification = NotificationCompat.Builder(context, "AULA_NOTIFICATION_CHANNEL")
             .setContentTitle("Lembrete de Aula")
             .setContentText("Tem uma aula marcada") // Texto curto para a notificação
             .setStyle(NotificationCompat.BigTextStyle().bigText(formattedText)) // Usando BigTextStyle para suporte a quebras de linha
-            .setSmallIcon(R.drawable.logogo) // Substitua pelo ícone desejado
+            .setSmallIcon(R.drawable.logofeedback1) // Ícone da notificação
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true) // Remove a notificação após o usuário interagir
             .build()
 
+        // Exibir a notificação
         notificationManager.notify(System.currentTimeMillis().toInt(), notification)
-
     }
 }

@@ -257,12 +257,10 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                 if (aulaDateTime != null && aulaDateTime.before(currentDateTime)) {
                     // A aula já passou, então não pode ser marcada ou desmarcada
                     if (isMarked) {
-                        // Tentando marcar uma aula que já passou
                         Log.d("MarcacaoFragment", "A aula já passou. Não pode ser marcada.")
                         Toast.makeText(context, "Esta aula já não pode ser marcada", Toast.LENGTH_SHORT).show()
                         aula.isMarked = false
                     } else {
-                        // Tentando desmarcar uma aula que já passou
                         Log.d("MarcacaoFragment", "A aula já passou. Não pode ser desmarcada.")
                         Toast.makeText(context, "Esta aula já não pode ser desmarcada", Toast.LENGTH_SHORT).show()
                         aula.isMarked = true
@@ -277,9 +275,7 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                 return
             }
 
-            // Caso contrário, prosseguir com a lógica original de marcação
             val currentDateTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
-
             val jsonParams = JSONObject().apply {
                 put("id_user", userId)
                 put("id_aula", aula.id_aula)
@@ -291,7 +287,6 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                 put("isMarked", isMarked)
 
                 if (!isMarked) {
-                    // Adiciona o id_marcacao ao JSON apenas quando desmarcando
                     val idMarcacao = marcacoesMap[aulaId]
                     if (idMarcacao != null) {
                         put("id_marcacao", idMarcacao)
@@ -302,7 +297,7 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                 }
             }
 
-            Log.d("MarcacaoFragment", "Enviando JSON para API: $jsonParams") // Log dos parâmetros
+            Log.d("MarcacaoFragment", "Enviando JSON para API: $jsonParams")
 
             val url = if (isMarked) {
                 "https://esan-tesp-ds-paw.web.ua.pt/tesp-ds-g37/api/marcaraula.php"
@@ -318,79 +313,74 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                     Log.d("MarcacaoFragment", "Resposta recebida da API: $response")
 
                     if (isMarked) {
-                        // Chama a função para verificar a permissão antes de agendar
                         checkAndRequestNotificationPermission()
 
                         val id = response.optInt("id_marcacao", -1)
                         if (id != -1) {
-                            // Atualiza o estado da aula diretamente na lista
                             aula.isMarked = true
                             marcacoesMap[aulaId] = id
-                            Log.d("MarcacaoFragment", "ID da marcação recebida: $id") // Log do id da marcação
-                            saveMarcacoesToPreferences(userId) // Salva no SharedPreferences
+                            Log.d("MarcacaoFragment", "ID da marcação recebida: $id")
+                            saveMarcacoesToPreferences(userId)
 
-                            // Notifica o adaptador para atualizar o item específico
                             val position = todasAulas.indexOf(aula)
                             if (position >= 0) {
-                                aulasAdapter.notifyItemChanged(position) // Atualiza o item específico na RecyclerView
+                                aulasAdapter.notifyItemChanged(position)
                             }
 
-                            // Calcular o horário da notificação (1 hora antes da aula)
                             val dateTimeFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                             dateTimeFormat.timeZone = TimeZone.getDefault()
                             val aulaDateTime = dateTimeFormat.parse(aula.horario)
-                            val notificationTime = aulaDateTime.time - 3600000 // 1 hora antes (em milissegundos)
+                            val notificationTime = aulaDateTime.time - 3600000
 
-                            // Log da hora agendada
                             val notificationTimeFormatted = dateTimeFormat.format(Date(notificationTime))
                             Log.d("MarcacaoFragment", "Notificação agendada para 1 hora antes: $notificationTimeFormatted")
 
-                            // Agendar o alarme
                             val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
                             val intent = Intent(context, NotificationReceiver::class.java).apply {
-                                putExtra("nome_aula", aula.nomeCategoria) // Nome da aula
-                                putExtra("horario_aula", aula.horario) // Horário da aula
+                                putExtra("nome_aula", aula.nomeCategoria)
+                                putExtra("horario_aula", aula.horario)
                             }
 
                             val pendingIntent = PendingIntent.getBroadcast(
                                 context,
-                                aulaId, // Use o ID da aula como requestCode
+                                aulaId,
                                 intent,
                                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                             )
 
-                            // Garantir que o alarme seja acionado mesmo em modo de economia de bateria
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                alarmManager.setExactAndAllowWhileIdle(
-                                    AlarmManager.RTC_WAKEUP,
-                                    notificationTime,
-                                    pendingIntent
-                                )
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
+                                val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                                context?.startActivity(intent)
+                                Toast.makeText(context, "Permissão necessária para agendar alarmes exatos", Toast.LENGTH_SHORT).show()
                             } else {
-                                alarmManager.setExact(
-                                    AlarmManager.RTC_WAKEUP,
-                                    notificationTime,
-                                    pendingIntent
-                                )
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    alarmManager.setExactAndAllowWhileIdle(
+                                        AlarmManager.RTC_WAKEUP,
+                                        notificationTime,
+                                        pendingIntent
+                                    )
+                                } else {
+                                    alarmManager.setExact(
+                                        AlarmManager.RTC_WAKEUP,
+                                        notificationTime,
+                                        pendingIntent
+                                    )
+                                }
                             }
-
-
                         } else {
                             Log.d("MarcacaoFragment", "ID da marcação não recebido ou inválido")
                         }
                     } else {
                         val removedId = marcacoesMap.remove(aulaId)
                         aula.isMarked = false
-                        Log.d("MarcacaoFragment", "Aula desmarcada. ID da marcação removido: $removedId") // Log da remoção
-                        saveMarcacoesToPreferences(userId) // Salva no SharedPreferences
+                        Log.d("MarcacaoFragment", "Aula desmarcada. ID da marcação removido: $removedId")
+                        saveMarcacoesToPreferences(userId)
 
-                        // Notifica o adaptador para atualizar o item específico
                         val position = todasAulas.indexOf(aula)
                         if (position >= 0) {
-                            aulasAdapter.notifyItemChanged(position) // Atualiza o item específico na RecyclerView
+                            aulasAdapter.notifyItemChanged(position)
                         }
 
-                        // Cancelar a notificação ao desmarcar
                         val intent = Intent(context, NotificationReceiver::class.java)
                         val pendingIntent = PendingIntent.getBroadcast(
                             context,
@@ -400,12 +390,9 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                         )
 
                         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-                        // Cancelar o alarme
                         alarmManager.cancel(pendingIntent)
                         Log.d("MarcacaoFragment", "Notificação cancelada para a aula: $aulaId")
                     }
-
 
                     Toast.makeText(context, "Operação realizada com sucesso", Toast.LENGTH_SHORT).show()
                 },
@@ -417,10 +404,11 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
 
             queue.add(jsonObjectRequest)
         } else {
-            Log.d("MarcacaoFragment", "Aula não encontrada para o ID: $aulaId") // Log se a aula não for encontrada
+            Log.d("MarcacaoFragment", "Aula não encontrada para o ID: $aulaId")
             Toast.makeText(context, "Aula não encontrada", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     fun checkAndRequestNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -449,7 +437,7 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
             }
             .setNegativeButton("Não") { dialog, _ ->
                 dialog.dismiss()
-                Log.d("MarcacaoFragment", "Usuário recusou a permissão para notificações.")
+                Log.d("MarcacaoFragment", "User recusou a permissão para notificações.")
             }
             .show()
     }

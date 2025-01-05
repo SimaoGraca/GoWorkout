@@ -138,7 +138,7 @@ class EditarPerfilActivity : AppCompatActivity() {
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> checkCameraPermission() // Verifica permissão para a câmera
-                    1 -> checkStoragePermission() // Verifica permissão para a galeria
+                    1 -> openGallery() // Verifica permissão para a galeria
                 }
             }
         builder.show()
@@ -153,14 +153,7 @@ class EditarPerfilActivity : AppCompatActivity() {
         }
     }
 
-    // Verificar e solicitar permissão para acessar a galeria
-    private fun checkStoragePermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), STORAGE_PERMISSION_REQUEST_CODE)
-        } else {
-            openGallery()
-        }
-    }
+
 
     // Abre a câmera
     private fun openCamera() {
@@ -177,26 +170,29 @@ class EditarPerfilActivity : AppCompatActivity() {
         startActivityForResult(intent, PICK_IMAGE_REQUEST)
     }
 
+
+
     // Trata os resultados das permissões
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
         when (requestCode) {
-            CAMERA_PERMISSION_REQUEST_CODE -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    openCamera() // Permissão concedida, abre a câmera
-                } else {
-                    Toast.makeText(this, "Permissão para a câmera negada", Toast.LENGTH_SHORT).show()
-                }
-            }
             STORAGE_PERMISSION_REQUEST_CODE -> {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    openGallery() // Permissão concedida, abre a galeria
+                    // Permissão concedida
+                    openGallery()
                 } else {
-                    Toast.makeText(this, "Permissão para a galeria negada", Toast.LENGTH_SHORT).show()
+                    // Permissão negada
+                    Toast.makeText(this, "Permissão para a galeria negada.", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -238,7 +234,6 @@ class EditarPerfilActivity : AppCompatActivity() {
             }
         }
     }
-
 
 
 
