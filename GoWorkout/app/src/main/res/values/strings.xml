@@ -39,6 +39,10 @@
     <string name="text_feriado">Feriado</string>
     <string name="text_fechado">Fechado</string>
     <string name="text_instrutor">Instrutor</string>
+    <string name="feedbacktextapp">Por favor, avalie a nossa app</string>
+    <string name="textleave">Tem certeza que deseja sair?</string>
+    <string name="textyes">Sim</string>
+    <string name="textno">No</string>
 
 
 

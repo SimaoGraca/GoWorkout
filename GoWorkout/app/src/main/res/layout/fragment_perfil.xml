@@ -110,13 +110,19 @@
                     android:id="@+id/rating_bar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:progressTint="@android:color/holo_orange_light"
                     android:numStars="5"
                     android:rating="0"
-                    android:stepSize="0.5"
-                    android:layout_marginBottom="16dp"
+                    android:stepSize="1.0"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="8dp"
                     android:layout_gravity="center"/>
 
                 <!-- EditText para feedback de texto -->
+
+                <!-- Botão Enviar para enviar o feedback -->
                 <EditText
                     android:id="@+id/feedback_message"
                     android:layout_width="356dp"
@@ -128,7 +134,6 @@
                     android:scrollbars="vertical"
                     android:textColor="@android:color/white" />
 
-                <!-- Botão Enviar para enviar o feedback -->
                 <Button
                     android:id="@+id/send_feedback_button"
                     android:layout_width="wrap_content"

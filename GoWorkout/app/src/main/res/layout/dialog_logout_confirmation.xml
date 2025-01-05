@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#1e1e1e"
     android:padding="16dp"
     android:orientation="vertical"
     android:gravity="center">
@@ -10,9 +11,9 @@
         android:id="@+id/textLogoutMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Você tem certeza que deseja sair?"
+        android:text="@string/textleave"
         android:textSize="16sp"
-        android:textColor="#fff"
+        android:textColor="@android:color/white"
         android:layout_marginBottom="16dp"/>
 
     <LinearLayout
@@ -25,13 +26,17 @@
             android:id="@+id/btnYes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sim"
+            android:backgroundTint="@color/black"
+            android:textColor="@android:color/white"
+            android:text="@string/textyes"
             android:layout_marginEnd="16dp"/>
 
         <Button
             android:id="@+id/btnNo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Não"/>
+            android:backgroundTint="@color/black"
+            android:textColor="@android:color/white"
+            android:text="@string/textno"/>
     </LinearLayout>
 </LinearLayout>

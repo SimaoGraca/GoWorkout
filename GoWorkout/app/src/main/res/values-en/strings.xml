@@ -39,6 +39,10 @@
     <string name="text_feriado">Holiday</string>
     <string name="text_fechado">Closed</string>
     <string name="text_instrutor">Instructor</string>
+    <string name="feedbacktextapp">Please rate our app</string>
+    <string name="textleave">Are you sure you want to leave?</string>
+    <string name="textyes">Yes</string>
+    <string name="textno">No</string>
 
 
     <!-- Frases Motivacionais -->

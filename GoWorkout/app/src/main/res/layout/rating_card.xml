@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="#1e1e1e"
         android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="0dp"
@@ -31,13 +32,23 @@
                 android:focusable="true" />
         </RelativeLayout>
 
+        <!-- Imagem acima do texto -->
+
+        <ImageView
+            android:id="@+id/feedbackImage"
+            android:layout_width="174dp"
+            android:layout_height="81dp"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="Imagem de feedback"
+            android:src="@drawable/logofeedback" />
+
         <TextView
             android:id="@+id/tvRatingPrompt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Por favor, avalie o aplicativo"
+            android:hint="@string/feedbacktextapp"
             android:textSize="16sp"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:layout_marginBottom="8dp" />
 
         <RatingBar
@@ -46,14 +57,18 @@
             android:layout_height="wrap_content"
             android:numStars="5"
             android:stepSize="1.0"
+            android:layout_marginBottom="8dp"
             android:progressTint="@android:color/holo_orange_light"
-            android:layout_marginBottom="8dp" />
+            android:scaleX="0.8"
+            android:scaleY="0.8" />
+
 
         <EditText
             android:id="@+id/etFeedback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Deixe seu feedback"
+            android:backgroundTint="@android:color/white"
+            android:hint="@string/feedbacktext"
             android:inputType="textMultiLine"
             android:layout_marginBottom="8dp" />
 
@@ -61,12 +76,9 @@
             android:id="@+id/btnSubmitFeedback"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Enviar"
-            android:background="@android:color/black"
+            android:text="@string/text_invite"
+            android:backgroundTint="@color/black"
             android:textColor="@android:color/white"
             android:layout_centerHorizontal="true" />
     </LinearLayout>
 </RelativeLayout>
-
-
-

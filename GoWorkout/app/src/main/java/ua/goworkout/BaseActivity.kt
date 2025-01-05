@@ -155,46 +155,6 @@ open class BaseActivity : AppCompatActivity() {
         userId?.let { checkUserFeedback(it.toString()) }
     }
 
-    private fun setLocale(languageCode: String) {
-        // Definir o novo idioma
-        val locale = Locale(languageCode)
-        Locale.setDefault(locale)
-
-        // Aplicar o novo idioma à configuração
-        val config = resources.configuration
-        config.setLocale(locale)
-        resources.updateConfiguration(config, resources.displayMetrics)
-
-        // Salvar a preferência de idioma no SharedPreferences
-        val sharedPref = getSharedPreferences("pmLogin", Context.MODE_PRIVATE)
-        sharedPref.edit().putString("language", languageCode).apply()
-
-        // Atualizar a interface de forma transparente
-        invalidateOptionsMenu() // Invalida o menu para forçar a atualização de textos
-
-        // Atualizar a interface de outras partes (por exemplo, recarregar texto)
-        // Aqui você pode também forçar o reload de certos componentes ou UI que precisam ser atualizados
-    }
-
-    private fun toggleLanguageFlag(languageFlag: ImageView) {
-        // Recuperar o idioma atual do SharedPreferences
-        val sharedPref = getSharedPreferences("pmLogin", Context.MODE_PRIVATE)
-        var isPortugueseFlag = sharedPref.getString("language", "pt") == "pt"
-
-        // Alterar o idioma e a bandeira
-        if (isPortugueseFlag) {
-            setLocale("en") // Definir para inglês
-            languageFlag.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.english_flag, null))
-        } else {
-            setLocale("pt") // Definir para português
-            languageFlag.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.portuguese_flag, null))
-        }
-
-        // Atualizar o idioma no SharedPreferences
-        isPortugueseFlag = !isPortugueseFlag
-        sharedPref.edit().putString("language", if (isPortugueseFlag) "pt" else "en").apply()
-
-    }
 
     private fun checkUserFeedback(userId: String) {
         val url = "https://esan-tesp-ds-paw.web.ua.pt/tesp-ds-g37/api/checkFeedback.php"
@@ -245,6 +205,7 @@ open class BaseActivity : AppCompatActivity() {
             val rating = ratingBar.rating
             val feedback = feedbackText.text.toString()
             submitFeedback(userId!!.toString(), rating, feedback)
+            hideRatingCard()
         }
 
         ratingCardContainer.setOnTouchListener { v, event ->
