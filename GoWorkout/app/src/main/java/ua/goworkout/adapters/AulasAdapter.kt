@@ -1,12 +1,18 @@
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat.getString
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import org.json.JSONObject
+import com.android.volley.Request
 import ua.goworkout.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -57,7 +63,6 @@ class AulasAdapter(
         }
     }
 
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (getItemViewType(position) == VIEW_TYPE_AULA) {
             val aula = aulasList!![position]
@@ -89,15 +94,44 @@ class AulasAdapter(
             }
 
             aulaHolder.buttonMarcar.setOnClickListener {
-                // Atualiza o estado de 'isMarked' da aula
-                aula.isMarked = true
+                // Verificar se a aula está cheia
+                val lotacaoUrl = "https://esan-tesp-ds-paw.web.ua.pt/tesp-ds-g37/api/verificarlotacaoaula.php"
+                val lotacaoParams = JSONObject().apply {
+                    put("id_aula", aula.id_aula)
+                }
 
-                // Chama o listener para fazer a operação de marcação
-                listener.onAulaCheckClick(aula.id_aula, aula.userId, true)
+                val queue = Volley.newRequestQueue(context)
 
-                // Notifica o RecyclerView para atualizar o item da aula específico
-                notifyItemChanged(position)
+                val lotacaoRequest = JsonObjectRequest(
+                    Request.Method.POST, lotacaoUrl, lotacaoParams,
+                    { lotacaoResponse ->
+                        val isLotacaoCheia = lotacaoResponse.optBoolean("isLotacaoCheia", false)
+
+                        // Se a aula estiver cheia, não permite marcar e exibe uma mensagem
+                        if (isLotacaoCheia) {
+                            Log.d("MarcacaoFragment", "Aula com ID ${aula.id_aula} está cheia.")
+                            Toast.makeText(context, "Esta aula já está cheia", Toast.LENGTH_SHORT).show()
+                        } else {
+                            // Se a aula não estiver cheia, pode atualizar o estado de 'isMarked'
+                            aula.isMarked = true
+
+                            // Chama o listener para fazer a operação de marcação
+                            listener.onAulaCheckClick(aula.id_aula, aula.userId, true)
+
+                            // Notifica o RecyclerView para atualizar o item da aula específico
+                            notifyItemChanged(position)
+                        }
+                    },
+                    { error ->
+                        Log.e("MarcacaoFragment", "Erro ao verificar lotação da aula: $error")
+                        Toast.makeText(context, "Erro ao verificar lotação da aula", Toast.LENGTH_SHORT).show()
+                    }
+                )
+
+                // Adiciona a requisição para o queue
+                queue.add(lotacaoRequest)
             }
+
 
             aulaHolder.buttonDesmarcar.setOnClickListener {
                 // Atualiza o estado de 'isMarked' da aula

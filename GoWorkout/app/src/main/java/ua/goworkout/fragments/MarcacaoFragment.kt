@@ -26,6 +26,7 @@ import ua.goworkout.NotificationReceiver
 import ua.goworkout.databinding.FragmentMarcacoesBinding
 import java.text.SimpleDateFormat
 import java.util.*
+import com.android.volley.RequestQueue
 
 class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
 
@@ -265,16 +266,17 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                         Toast.makeText(context, "Esta aula já não pode ser desmarcada", Toast.LENGTH_SHORT).show()
                         aula.isMarked = true
                     }
-                    return
+                    return // Sair da função imediatamente
                 } else {
                     Log.d("MarcacaoFragment", "A aula está disponível para marcação/desmarcação.")
                 }
             } catch (e: Exception) {
                 Log.e("MarcacaoFragment", "Erro ao processar a data e hora da aula: ${e.message}", e)
                 Toast.makeText(context, "Erro ao verificar a data e hora da aula", Toast.LENGTH_SHORT).show()
-                return
+                return // Sair da função em caso de erro
             }
 
+            // Preparar os dados para marcação/desmarcação
             val currentDateTime = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())
             val jsonParams = JSONObject().apply {
                 put("id_user", userId)
@@ -297,20 +299,22 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                 }
             }
 
-            Log.d("MarcacaoFragment", "Enviando JSON para API: $jsonParams")
+            // Inicializar o RequestQueue
+            val queue: RequestQueue = Volley.newRequestQueue(requireContext())
 
+            // Só cria a requisição para marcação/desmarcação
             val url = if (isMarked) {
                 "https://esan-tesp-ds-paw.web.ua.pt/tesp-ds-g37/api/marcaraula.php"
             } else {
                 "https://esan-tesp-ds-paw.web.ua.pt/tesp-ds-g37/api/desmarcaraula.php"
             }
 
-            val queue = Volley.newRequestQueue(requireContext())
-
             val jsonObjectRequest = JsonObjectRequest(
                 Request.Method.POST, url, jsonParams,
                 { response ->
                     Log.d("MarcacaoFragment", "Resposta recebida da API: $response")
+                    val message = response.optString("message", "Operação realizada com sucesso")
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
                     if (isMarked) {
                         checkAndRequestNotificationPermission()
@@ -324,6 +328,7 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
 
                             val position = todasAulas.indexOf(aula)
                             if (position >= 0) {
+                                // Notificar o RecyclerView sobre a mudança
                                 aulasAdapter.notifyItemChanged(position)
                             }
 
@@ -393,8 +398,6 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                         alarmManager.cancel(pendingIntent)
                         Log.d("MarcacaoFragment", "Notificação cancelada para a aula: $aulaId")
                     }
-
-                    Toast.makeText(context, "Operação realizada com sucesso", Toast.LENGTH_SHORT).show()
                 },
                 { error ->
                     Log.e("MarcacaoFragment", "Erro ao realizar operação: $error")
@@ -408,6 +411,8 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
             Toast.makeText(context, "Aula não encontrada", Toast.LENGTH_SHORT).show()
         }
     }
+
+
 
 
     fun checkAndRequestNotificationPermission() {

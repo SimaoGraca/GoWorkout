@@ -20,7 +20,7 @@
 
         <View
             android:id="@+id/vertical_line"
-            android:layout_width="8dp"
+            android:layout_width="6dp"
             android:layout_height="match_parent"
             android:background="@android:color/white" />
 
