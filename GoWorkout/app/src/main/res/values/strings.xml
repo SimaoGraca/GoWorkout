@@ -43,8 +43,8 @@
     <string name="textleave">Tem certeza que deseja sair?</string>
     <string name="textyes">Sim</string>
     <string name="textno">Nao</string>
-
-
+    <string name="historico">Histórico</string>
+    <string name="historicoaulas">Histórico de aulas</string>
 
     <!-- Frases Motivacionais -->
     <string-array name="frases_motivacionais">

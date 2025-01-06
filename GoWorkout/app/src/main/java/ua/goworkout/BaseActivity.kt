@@ -29,6 +29,7 @@ import com.google.android.material.navigation.NavigationView
 import org.json.JSONException
 import org.json.JSONObject
 import ua.goworkout.databinding.ActivityBaseBinding
+import ua.goworkout.fragments.HistoryFragment
 import ua.goworkout.fragments.MarcacaoFragment
 import ua.goworkout.fragments.PerfilFragment
 import ua.goworkout.fragments.UserFragment
@@ -105,6 +106,7 @@ open class BaseActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_home -> loadFragment(UserFragment())
                 R.id.nav_marcar -> loadFragment(MarcacaoFragment())
+                R.id.nav_history -> loadFragment(HistoryFragment())
                 R.id.nav_perfil -> loadFragment(PerfilFragment())
                 else -> false
             }

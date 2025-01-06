@@ -48,6 +48,8 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.ui.geometry.android)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit.junit)
     androidTestImplementation(libs.junit.junit)
 

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="16dp"
+    android:backgroundTint="#1e1e1e"
+    app:cardElevation="4dp">
+
+    <View
+        android:id="@+id/vertical_line"
+        android:layout_width="6dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+
+
+        <!-- Nome da aula e data -->
+        <TextView
+            android:id="@+id/class_name_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cycle - 25/04/2024"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
