@@ -48,8 +48,6 @@ open class BaseActivity : AppCompatActivity() {
     private lateinit var requestQueue: RequestQueue
     private var userId: Int? = null
 
-    private var isPortugueseFlag = true
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -59,6 +57,7 @@ open class BaseActivity : AppCompatActivity() {
         val cor = sharedPref.getString("cor", "#000000")
         userId = sharedPref.getInt("id_user", 1)
         val nome = sharedPref.getString("nome", "User")
+        val clubeNome = sharedPref?.getString("clube_nome", "Clube não encontrado")
 
         findViewById<View>(R.id.top_bar).setBackgroundColor(Color.parseColor(cor))
 
@@ -104,47 +103,65 @@ open class BaseActivity : AppCompatActivity() {
         bottomNav.setOnItemSelectedListener { item: MenuItem ->
             binding.contentFrame.removeAllViews()
             when (item.itemId) {
-                R.id.nav_home -> loadFragment(UserFragment())
-                R.id.nav_marcar -> loadFragment(MarcacaoFragment())
-                R.id.nav_history -> loadFragment(HistoryFragment())
-                R.id.nav_perfil -> loadFragment(PerfilFragment())
+                R.id.nav_home -> {
+                    loadFragment(UserFragment())
+                    navView.setCheckedItem(R.id.nav_inicio)
+                }
+                R.id.nav_marcar -> {
+                    loadFragment(MarcacaoFragment())
+                    navView.setCheckedItem(R.id.nav_marcaraula)
+                }
+                R.id.nav_history -> {
+                    loadFragment(HistoryFragment())
+                    navView.setCheckedItem(R.id.nav_historico)
+                }
+                R.id.nav_perfil -> {
+                    loadFragment(PerfilFragment())
+                    navView.setCheckedItem(R.id.nav_perfil)
+                }
                 else -> false
             }
-            true
+            return@setOnItemSelectedListener true
         }
 
         // Configuração do NavigationView
         navView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
+                R.id.nav_inicio -> {
+                    loadFragment(UserFragment())
+                    bottomNav.selectedItemId = R.id.nav_home
+                }
                 R.id.nav_marcaraula -> {
                     loadFragment(MarcacaoFragment())
                     bottomNav.selectedItemId = R.id.nav_marcar
-                    true
+                }
+                R.id.nav_historico -> {
+                    loadFragment(HistoryFragment())
+                    bottomNav.selectedItemId = R.id.nav_history
                 }
                 R.id.nav_perfil -> {
                     loadFragment(PerfilFragment())
                     bottomNav.selectedItemId = R.id.nav_perfil
-                    true
                 }
                 R.id.nav_changepassword -> {
                     startActivity(Intent(this, EditarPasswordActivity::class.java))
-                    true
                 }
                 R.id.nav_logout -> {
                     showLogoutConfirmationDialog()
-                    true
                 }
-                else -> false
             }
             drawerLayout.closeDrawers()
-            true
+            return@setNavigationItemSelectedListener true
         }
+
 
         // Cabeçalho do NavigationView
         val headerView = navView.getHeaderView(0)
         val backArrow = headerView.findViewById<ImageView>(R.id.back_arrow)
         val nameClientTextView = headerView.findViewById<TextView>(R.id.client_name)
+        val nameClubTextView = headerView.findViewById<TextView>(R.id.gym_name)
         nameClientTextView.text = nome
+        nameClubTextView.text = clubeNome
 
         backArrow.setOnClickListener {
             drawerLayout.closeDrawers()

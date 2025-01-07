@@ -2,9 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_inicio"
+            android:title="Home"
+            android:icon="@drawable/ichome3"/>
+        <item
             android:id="@+id/nav_marcaraula"
             android:title="@string/aulas"
             android:icon="@drawable/icmarcar1"/>
+        <item
+            android:id="@+id/nav_historico"
+            android:title="@string/historico"
+            android:icon="@drawable/ic_history"/>
         <item
             android:id="@+id/nav_perfil"
             android:title="Perfil"

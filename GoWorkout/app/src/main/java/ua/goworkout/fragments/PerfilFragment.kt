@@ -83,35 +83,6 @@ class PerfilFragment : Fragment() {
                 Toast.makeText(requireContext(), "ID do user ou do clube não encontrado", Toast.LENGTH_SHORT).show()
             }
         }
-
-        // Ocultar a Bottom Navigation quando o campo de feedback (EditText) receber o foco
-        feedbackMessage.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                bottomNav.visibility = View.GONE // Ocultar Bottom Navigation
-            }
-        }
-
-        // Fechar o teclado ao clicar fora do campo de feedback
-        binding.root.setOnTouchListener { _, _ ->
-            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(view.windowToken, 0) // Fecha o teclado
-
-            // Restaurar a Bottom Navigation quando o teclado for fechado
-            bottomNav.visibility = View.VISIBLE
-
-            false // Retorna falso para que o toque possa ser propagado para outros elementos
-        }
-
-        // Restaurar a Bottom Navigation quando o teclado for fechado
-        binding.root.viewTreeObserver.addOnPreDrawListener {
-            val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            val isKeyboardVisible = imm.isAcceptingText
-            if (!isKeyboardVisible) {
-                // Se o teclado estiver fechado, restaurar a Bottom Navigation
-                bottomNav.visibility = View.VISIBLE
-            }
-            true // Retorna verdadeiro para continuar a renderização
-        }
     }
 
     private fun submitFeedback(userId: String, rating: Float, feedback: String, clubeId: String) {

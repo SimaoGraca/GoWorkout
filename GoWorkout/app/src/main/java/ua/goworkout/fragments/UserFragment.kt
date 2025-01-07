@@ -176,56 +176,54 @@ class UserFragment : Fragment() {
         val jsonObjectRequest = JsonObjectRequest(
             Request.Method.POST, url, jsonParams,
             { response ->
-                // Processar a resposta
-                val hasNotices = response.getBoolean("hasNotices")
-                if (hasNotices) {
-                    val notices = response.getJSONArray("notices")
-                    val noticesList = mutableListOf<Pair<String, String>>() // Para armazenar o título e descrição das notícias
-                    for (i in 0 until notices.length()) {
-                        val notice = notices.getJSONObject(i)
-                        val title = notice.getString("TITULO")
-                        val description = notice.getString("DESCRICAO")
-                        noticesList.add(Pair(title, description)) // Adiciona título e descrição
+                // Verifique se o binding não é nulo antes de usá-lo
+                if (_binding != null) {
+                    val hasNotices = response.getBoolean("hasNotices")
+                    if (hasNotices) {
+                        val notices = response.getJSONArray("notices")
+                        val noticesList = mutableListOf<Pair<String, String>>() // Para armazenar o título e descrição das notícias
+                        for (i in 0 until notices.length()) {
+                            val notice = notices.getJSONObject(i)
+                            val title = notice.getString("TITULO")
+                            val description = notice.getString("DESCRICAO")
+                            noticesList.add(Pair(title, description)) // Adiciona título e descrição
+                        }
+
+                        // Exibir o card de notícias se houver notícias
+                        binding?.titleNews?.visibility = View.VISIBLE
+                        binding?.noticiasCard?.visibility = View.VISIBLE
+
+                        // Atualizar o conteúdo do card com as notícias
+                        val formattedNotices = SpannableStringBuilder()
+
+                        for (notice in noticesList) {
+                            val title = notice.first
+                            val description = notice.second
+
+                            // Criar o texto formatado para a notícia
+                            val noticeText = SpannableString("$title\n$description\n\n")
+
+                            // Aplica o negrito e tamanho ao título (primeira parte do texto)
+                            val titleStart = 0
+                            val titleEnd = "$title\n".length
+                            noticeText.setSpan(StyleSpan(Typeface.BOLD), titleStart, titleEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                            noticeText.setSpan(AbsoluteSizeSpan(16, true), titleStart, titleEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                            // Aplica o tamanho normal à descrição (segunda parte do texto)
+                            val descriptionStart = titleEnd
+                            val descriptionEnd = noticeText.length
+                            noticeText.setSpan(AbsoluteSizeSpan(14, true), descriptionStart, descriptionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                            // Adiciona o texto formatado ao StringBuilder
+                            formattedNotices.append(noticeText)
+                        }
+
+                        // Exibir o texto formatado dentro do TextView
+                        binding?.newsInformation?.text = formattedNotices
+                    } else {
+                        // Ocultar o card de notícias se não houver notícias
+                        binding?.noticiasCard?.visibility = View.GONE
                     }
-
-                    // Exibir o card de notícias se houver notícias
-                    binding.titleNews.visibility = View.VISIBLE
-                    binding.noticiasCard.visibility = View.VISIBLE
-
-
-                    // Atualizar o conteúdo do card com as notícias
-                    // Vamos exibir o título e a descrição dentro do CardView
-                    val formattedNotices = SpannableStringBuilder()
-
-                    for (notice in noticesList) {
-                        val title = notice.first
-                        val description = notice.second
-
-                        // Criar o texto formatado para a notícia
-                        val noticeText = SpannableString("$title\n$description\n\n")
-
-                        // Aplica o negrito e tamanho ao título (primeira parte do texto)
-                        val titleStart = 0
-                        val titleEnd = "$title\n".length
-                        noticeText.setSpan(StyleSpan(Typeface.BOLD), titleStart, titleEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-                        noticeText.setSpan(AbsoluteSizeSpan(16, true), titleStart, titleEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-                        // Aplica o tamanho normal à descrição (segunda parte do texto)
-                        val descriptionStart = titleEnd
-                        val descriptionEnd = noticeText.length
-                        noticeText.setSpan(AbsoluteSizeSpan(14, true), descriptionStart, descriptionEnd, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-                        // Adiciona o texto formatado ao StringBuilder
-                        formattedNotices.append(noticeText)
-                    }
-
-                    // Exibir o texto formatado dentro do TextView
-                    binding.newsInformation.text = formattedNotices
-
-
-                } else {
-                    // Ocultar o card de notícias se não houver notícias
-                    binding.noticiasCard.visibility = View.GONE
                 }
             },
             { error ->
@@ -236,6 +234,7 @@ class UserFragment : Fragment() {
         // Adicionar a solicitação à fila
         Volley.newRequestQueue(requireContext()).add(jsonObjectRequest)
     }
+
 
 
 

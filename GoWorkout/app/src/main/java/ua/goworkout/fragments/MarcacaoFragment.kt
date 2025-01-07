@@ -80,11 +80,11 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
         val idUser = sharedPref?.getInt("id_user", -1)
         val clubeId = sharedPref?.getString("clube_id", "")
 
-        // Verificar se os dados são válidos
         if (idUser != null && idUser != -1 && !clubeId.isNullOrEmpty()) {
             val clubeIdInt = clubeId.toIntOrNull()
             if (clubeIdInt != null) {
                 getAulasDisponiveis(idUser, clubeIdInt)
+                loadMarcacoesFromDatabase(idUser) // Carregar marcações do banco de dados
             } else {
                 Toast.makeText(context, "ID do clube inválido", Toast.LENGTH_SHORT).show()
             }
@@ -143,19 +143,17 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                         val aula = aulasArray.getJSONObject(i)
                         val id_user = userId
                         val id_aula = aula.getInt("ID_AULA")
+                        val imagem_categoria = aula.getString("imagem_categoria")
                         val nomeCategoria = aula.getString("nome_categoria")
                         val horario = aula.getString("DATA_AULA")
                         val instrutor_nome = aula.getString("instrutor_nome")
                         val duracao = aula.getInt("DURACAO")
                         val corcategoria = aula.getString("cor_categoria")
-                        aulasList.add(Aula(id_aula, id_user, nomeCategoria, horario, instrutor_nome, duracao,corcategoria, false))
+                        aulasList.add(Aula(id_aula, id_user, nomeCategoria, horario, instrutor_nome, duracao,corcategoria,imagem_categoria, false))
                     }
 
                     // Armazenar todas as aulas para uso posterior
                     todasAulas = aulasList
-
-                    // Carregar as marcações do SharedPreferences
-                    loadMarcacoesFromPreferences()
 
                     // Filtrar as aulas para o dia selecionado
                     filterAulasBySelectedDate()
@@ -197,48 +195,66 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
         aulasAdapter.updateData(aulasList)
     }
 
-    private fun loadMarcacoesFromPreferences() {
-        val sharedPreferences = requireContext().getSharedPreferences("MarcacoesPrefs", Context.MODE_PRIVATE)
-        val jsonString = sharedPreferences.getString("marcacoes", null)
 
-        if (!jsonString.isNullOrEmpty()) {
-            val jsonMarcacoes = JSONObject(jsonString)
 
-            // Recuperar o ID do user armazenado
-            val storedUserId = jsonMarcacoes.optInt("id_user", -1)
+    private fun loadMarcacoesFromDatabase(userId: Int) {
+        val queue = Volley.newRequestQueue(requireContext())
+        val url = "https://esan-tesp-ds-paw.web.ua.pt/tesp-ds-g37/api/getmarcacoes.php"
 
-            // Recuperar o ID do user atualmente logado do SharedPreferences "pmLogin"
-            val currentUserId = activity?.getSharedPreferences("pmLogin", Context.MODE_PRIVATE)?.getInt("id_user", -1)
+        // Criar o JSON com o ID do user
+        val jsonParams = JSONObject().apply {
+            put("id_user", userId)
+        }
 
-            // Verificar se o ID do user armazenado é igual ao ID do usuário logado
-            if (storedUserId == currentUserId) {
-                for (key in jsonMarcacoes.keys()) {
-                    if (key != "id_user") {
-                        val aulaId = key.toInt()
-                        val idMarcacao = jsonMarcacoes.getInt(key)
-                        marcacoesMap[aulaId] = idMarcacao
+        // Log dos parâmetros enviados
+        Log.d("MarcacaoFragment", "A enviar requisição para $url com parâmetros: $jsonParams")
+
+        val jsonObjectRequest = JsonObjectRequest(
+            Request.Method.POST, url, jsonParams,
+            { response ->
+                try {
+                    // Log da resposta recebida
+                    Log.d("MarcacaoFragment", "Resposta recebida: $response")
+
+                    val marcacoesArray = response.getJSONArray("marcacoes")
+
+                    // Limpar o mapa de marcações antes de recarregar
+                    marcacoesMap.clear()
+
+                    for (i in 0 until marcacoesArray.length()) {
+                        val marcacao = marcacoesArray.getJSONObject(i)
+                        val idAula = marcacao.getInt("id_aula")
+                        val idMarcacao = marcacao.getInt("id_marcacao")
+
+                        // Atualizar o mapa de marcações
+                        marcacoesMap[idAula] = idMarcacao
                     }
+
+                    // Atualizar o estado das aulas baseando-se nas marcações
+                    updateAulasState()
+
+                } catch (e: Exception) {
+                    Log.e("MarcacaoFragment", "Erro ao processar as marcações do banco: ${e.message}", e)
+                    Toast.makeText(context, "Erro ao carregar marcações", Toast.LENGTH_SHORT).show()
                 }
+            },
+            { error ->
+                // Log do erro na requisição
+                Log.e("MarcacaoFragment", "Erro na requisição de marcações: ${error.message}")
+                Toast.makeText(context, "Erro ao buscar marcações", Toast.LENGTH_SHORT).show()
             }
-        }
+        )
+
+        queue.add(jsonObjectRequest)
     }
 
-
-    private fun saveMarcacoesToPreferences(userId: Int) {
-        val sharedPreferences = requireContext().getSharedPreferences("MarcacoesPrefs", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-
-        val jsonMarcacoes = JSONObject()
-        for ((aulaId, idMarcacao) in marcacoesMap) {
-            jsonMarcacoes.put(aulaId.toString(), idMarcacao)
+    private fun updateAulasState() {
+        todasAulas.forEach { aula ->
+            aula.isMarked = marcacoesMap.containsKey(aula.id_aula)
         }
-
-        // Adicionar o ID do user ao JSON
-        jsonMarcacoes.put("id_user", userId)
-
-        editor.putString("marcacoes", jsonMarcacoes.toString())
-        editor.apply()
+        filterAulasBySelectedDate() // Atualiza as aulas exibidas
     }
+
 
 
     override fun onAulaCheckClick(aulaId: Int, userId: Int, isMarked: Boolean) {
@@ -324,7 +340,6 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                             aula.isMarked = true
                             marcacoesMap[aulaId] = id
                             Log.d("MarcacaoFragment", "ID da marcação recebida: $id")
-                            saveMarcacoesToPreferences(userId)
 
                             val position = todasAulas.indexOf(aula)
                             if (position >= 0) {
@@ -343,6 +358,7 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                             val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
                             val intent = Intent(context, NotificationReceiver::class.java).apply {
                                 putExtra("nome_aula", aula.nomeCategoria)
+                                putExtra("imagem_categoria", aula.imagem_categoria)
                                 putExtra("horario_aula", aula.horario)
                             }
 
@@ -379,7 +395,6 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
                         val removedId = marcacoesMap.remove(aulaId)
                         aula.isMarked = false
                         Log.d("MarcacaoFragment", "Aula desmarcada. ID da marcação removido: $removedId")
-                        saveMarcacoesToPreferences(userId)
 
                         val position = todasAulas.indexOf(aula)
                         if (position >= 0) {
@@ -435,7 +450,7 @@ class MarcacaoFragment : Fragment(), AulasAdapter.OnAulaCheckClickListener {
             .setTitle("Permissão para Notificações")
             .setMessage("Gostaria de receber notificações para a sua aula?")
             .setPositiveButton("Sim") { _, _ ->
-                // Leva o usuário para as configurações de permissão
+                // Leva o user para as configurações de permissão
                 val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                 intent.putExtra(Settings.EXTRA_APP_PACKAGE, context?.packageName)
                 startActivity(intent)

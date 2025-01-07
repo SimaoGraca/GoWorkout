@@ -25,7 +25,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- TextView para o nome do usuário -->
+        <!-- TextView para o nome do user -->
         <TextView
             android:id="@+id/user_name"
             android:layout_width="wrap_content"
@@ -54,7 +54,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/user_name" />
 
-        <!-- Botão para mudar senha -->
+        <!-- Botão para mudar password -->
         <Button
             android:id="@+id/change_password_button"
             android:layout_width="150dp"

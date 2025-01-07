@@ -9,29 +9,48 @@
     android:backgroundTint="#1e1e1e"
     app:cardElevation="4dp">
 
-    <View
-        android:id="@+id/vertical_line"
-        android:layout_width="6dp"
-        android:layout_height="match_parent"
-        android:background="@android:color/white" />
-
     <LinearLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="horizontal">
 
+        <View
+            android:id="@+id/vertical_line"
+            android:layout_width="6dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/white" />
 
-
-        <!-- Nome da aula e data -->
-        <TextView
-            android:id="@+id/class_name_date"
+        <!-- Layout para a imagem e o texto -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cycle - 25/04/2024"
-            android:textSize="16sp"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:paddingStart="10dp"
+            android:gravity="center_vertical">
+
+            <!-- Imagem da categoria da aula -->
+            <ImageView
+                android:id="@+id/class_category_image"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/circular_background"
+                android:contentDescription="Categoria da aula"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+
+            <!-- Nome da aula e data -->
+            <TextView
+                android:id="@+id/class_name_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cycle - 25/04/2024"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

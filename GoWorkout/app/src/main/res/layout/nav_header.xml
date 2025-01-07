@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="35dp">
 
         <!-- Ícone de voltar -->
         <ImageView
@@ -20,21 +20,36 @@
             android:layout_height="30dp"
             android:src="@drawable/ic_arrow_back" />
 
-        <!-- Espaço entre os ícones -->
-        <View
+        <!-- Nome do ginásio (centralizado) -->
+        <TextView
+            android:id="@+id/gym_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:text="Nome do Gym"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:gravity="center" />
 
     </LinearLayout>
 
-    <!-- Nome do cliente -->
     <TextView
         android:id="@+id/client_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@android:color/white"
-        android:textSize="15sp" />  <!-- Aumentado para 20sp -->
+        android:paddingTop="20dp"
+        android:paddingStart="15dp"
+    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+    android:textColor="@android:color/white"
+    android:textSize="15sp" />
+
+    <!-- Linha abaixo do nome do cliente -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="15dp"
+    android:background="@android:color/darker_gray"
+    android:layout_marginTop="8dp" />
+
+
 </LinearLayout>
