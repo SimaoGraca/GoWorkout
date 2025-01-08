@@ -5,8 +5,13 @@
     <string name="text_mobile">Mobile</string>
     <string name="text_date">Date of Birth</string>
     <string name="text_gen">Gender</string>
+    <string name="hint_passwordconfirm">Confirm Password</string>
     <string name="text_peso">Weight (kg)</string>
     <string name="text_altura">Height (cm)</string>
+    <string name="text_registar">Register</string>
+    <string name="text_choosegender">Choose your gender</string>
+    <string name="text_chooseplan">Choose your plan</string>
+    <string name="text_chooseclub">Choose your club</string>
     <string name="hint_password" translatable="false">Password</string>
     <string name="text_enter" translatable="false">Login</string>
     <string name="text_save">Save</string>
@@ -45,6 +50,15 @@
     <string name="textno">No</string>
     <string name="historico">History</string>
     <string name="historicoaulas">Class history</string>
+    <string name="nextclasses">Next classes</string>
+    <string name="text_choosepic">Choose the profile picture</string>
+    <string name="text_comomarcar">How to book classes</string>
+    <string name="passo_1_text">1 - Click on the "Book" icon in the footer.</string>
+    <string name="passo_2_text">2 - In the header, select the day (which is the current one by default).</string>
+    <string name="passo_3_text">3 - Click the green button to book the class.</string>
+    <string name="nota_disponibilidade">Note: You can only book classes if they are still available. To cancel, simply click the red button.</string>
+
+
 
     <!-- Frases Motivacionais -->
     <string-array name="frases_motivacionais">

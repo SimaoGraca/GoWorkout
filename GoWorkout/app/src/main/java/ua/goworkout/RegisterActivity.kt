@@ -40,8 +40,12 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        // Configurar o Spinner com opções de gênero
-        val generos = arrayOf("Escolha o seu género", "Masculino", "Feminino", "Outro")
+        val generos = arrayOf(
+            getString(R.string.text_choosegender), // Obtém o texto do recurso de strings
+            "Masculino",
+            "Feminino",
+            "Outro"
+        )
         val adapter = object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, generos) {
             // Alterando a cor do texto do item selecionado, tamanho da fonte e padding
             override fun getView(position: Int, convertView: android.view.View?, parent: android.view.ViewGroup): android.view.View {
@@ -104,10 +108,10 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
 
-// Quando a atividade for carregada, chame a função para configurar o Spinner de Planos
+    // Quando a atividade for carregada, chame a função para configurar o Spinner de Planos
         setupPlanosSpinner()
 
-// Quando a atividade for carregada, chame a função para carregar os clubes
+    // Quando a atividade for carregada, chame a função para carregar os clubes
         fetchClubes()
 
 
@@ -169,7 +173,8 @@ class RegisterActivity : AppCompatActivity() {
                     val clubesMap = mutableMapOf<String, Int>()
 
                     // Adiciona o item de "placeholder" no começo da lista
-                    clubesList.add("Escolha o seu clube")
+                    // Adiciona o item de "placeholder" no começo da lista
+                    clubesList.add(getString(R.string.text_chooseclub))
 
                     for (i in 0 until clubesArray.length()) {
                         val clube = clubesArray.getJSONObject(i)
@@ -240,8 +245,7 @@ class RegisterActivity : AppCompatActivity() {
     // Função chamada para configurar o Spinner de Planos
     private fun setupPlanosSpinner() {
         // Cria uma lista inicial com o "Escolha o seu Plano"
-        val planosList = mutableListOf("Escolha o seu Plano")
-
+        val planosList = mutableListOf(getString(R.string.text_chooseplan))
 
 
         // Criando o adapter e personalizando a cor e o tamanho do texto

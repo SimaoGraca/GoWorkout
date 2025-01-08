@@ -31,6 +31,7 @@ import org.json.JSONObject
 import ua.goworkout.databinding.ActivityBaseBinding
 import ua.goworkout.fragments.HistoryFragment
 import ua.goworkout.fragments.MarcacaoFragment
+import ua.goworkout.fragments.NextclassesFragment
 import ua.goworkout.fragments.PerfilFragment
 import ua.goworkout.fragments.UserFragment
 import java.util.Locale
@@ -56,6 +57,7 @@ open class BaseActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences("pmLogin", Context.MODE_PRIVATE)
         val cor = sharedPref.getString("cor", "#000000")
         userId = sharedPref.getInt("id_user", 1)
+        val tipo_user = sharedPref.getString("tipo_user", "")
         val nome = sharedPref.getString("nome", "User")
         val clubeNome = sharedPref?.getString("clube_nome", "Clube não encontrado")
 
@@ -85,8 +87,25 @@ open class BaseActivity : AppCompatActivity() {
         drawerLayout.addDrawerListener(actionBarDrawerToggle)
         actionBarDrawerToggle.syncState()
 
+
+
+        Log.d("UserType", "Tipo de user: $tipo_user")
+
+        // Verificar se o tipo de usuário é instrutor
+        val isInstrutor = tipo_user.equals("instrutor", ignoreCase = true) // Comparação segura, ignorando maiúsculas/minúsculas
+
         // Configuração do BottomNavigationView
         val bottomNav: BottomNavigationView = findViewById(R.id.bottom_nav)
+        val menu = bottomNav.menu
+        val menu1 = navView.menu
+
+        // Ocultar o item "nav_nextclasses" se o user não for instrutor
+        if (!isInstrutor) {
+            menu.findItem(R.id.nav_nextclasses)?.isVisible = false
+            menu1.findItem(R.id.nav_nextclass)?.isVisible = false
+        }
+
+        // Configuração das cores dos ícones
         val iconColor = try {
             Color.parseColor(cor)
         } catch (e: IllegalArgumentException) {
@@ -100,6 +119,7 @@ open class BaseActivity : AppCompatActivity() {
         bottomNav.itemIconTintList = stateList
         bottomNav.setItemTextColor(ColorStateList.valueOf(Color.WHITE))
 
+        // Listener para os itens do BottomNavigationView
         bottomNav.setOnItemSelectedListener { item: MenuItem ->
             binding.contentFrame.removeAllViews()
             when (item.itemId) {
@@ -119,10 +139,17 @@ open class BaseActivity : AppCompatActivity() {
                     loadFragment(PerfilFragment())
                     navView.setCheckedItem(R.id.nav_perfil)
                 }
+                R.id.nav_nextclasses -> {
+                    if (isInstrutor) {
+                        loadFragment(NextclassesFragment())
+                        navView.setCheckedItem(R.id.nav_nextclass)
+                    }
+                }
                 else -> false
             }
             return@setOnItemSelectedListener true
         }
+
 
         // Configuração do NavigationView
         navView.setNavigationItemSelectedListener { item ->
@@ -130,6 +157,12 @@ open class BaseActivity : AppCompatActivity() {
                 R.id.nav_inicio -> {
                     loadFragment(UserFragment())
                     bottomNav.selectedItemId = R.id.nav_home
+                }
+                R.id.nav_nextclass -> {
+                    if (isInstrutor) {
+                        loadFragment(NextclassesFragment())
+                        bottomNav.selectedItemId = R.id.nav_nextclasses
+                    }
                 }
                 R.id.nav_marcaraula -> {
                     loadFragment(MarcacaoFragment())
@@ -294,6 +327,7 @@ open class BaseActivity : AppCompatActivity() {
         sharedPref.edit().apply {
             putBoolean("login", false)
             remove("id_user")
+            remove("tipo_user")
             remove("nome")
             remove("genero")
             remove("email")

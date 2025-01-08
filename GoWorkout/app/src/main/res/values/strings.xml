@@ -8,6 +8,11 @@
     <string name="text_peso">Peso (kg)</string>
     <string name="text_altura">Altura (cm)</string>
     <string name="hint_password">Password</string>
+    <string name="hint_passwordconfirm">Confirmar Password</string>
+    <string name="text_registar">Registar</string>
+    <string name="text_choosegender">Escolha o seu género</string>
+    <string name="text_chooseplan">Escolha o seu plano</string>
+    <string name="text_chooseclub">Escolha o seu clube</string>
     <string name="text_enter">Login</string>
     <string name="text_save">Guardar</string>
     <string name="text_invite">Enviar</string>
@@ -45,6 +50,14 @@
     <string name="textno">Nao</string>
     <string name="historico">Histórico</string>
     <string name="historicoaulas">Histórico de aulas</string>
+    <string name="nextclasses">Próximas aulas</string>
+    <string name="text_choosepic">Escolha a foto de perfil</string>
+    <string name="text_comomarcar">Como marcar aulas</string>
+    <string name="passo_1_text">1 - Clicar no ícone do rodapé "Marcar".</string>
+    <string name="passo_2_text">2 - No cabeçalho, selecionar o dia (que é atual por padrão).</string>
+    <string name="passo_3_text">3 - Clicar no botão verde para marcar a aula.</string>
+    <string name="nota_disponibilidade">Nota: Só é possível marcar aulas se ainda estiverem disponíveis. Para desmarcar, é só clicar no botão vermelho.</string>
+
 
     <!-- Frases Motivacionais -->
     <string-array name="frases_motivacionais">

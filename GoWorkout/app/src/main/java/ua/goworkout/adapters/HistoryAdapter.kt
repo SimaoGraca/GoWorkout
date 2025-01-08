@@ -23,7 +23,8 @@ class HistoryAdapter(
         fun bind(classInfo: ClassInfo) {
             // Converter a data para o formato desejado
             val originalFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            val desiredFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val desiredFormat = SimpleDateFormat("dd/MM/yyyy | HH:mm'H'", Locale.getDefault())
+
             val date = originalFormat.parse(classInfo.date)
             val formattedDate = date?.let { desiredFormat.format(it) }
 

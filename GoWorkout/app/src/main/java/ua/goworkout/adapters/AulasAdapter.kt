@@ -103,37 +103,61 @@ class AulasAdapter(
                 val currentTime = Date()
 
                 if (classDate != null && classDate.after(currentTime)) {
-                    // A aula ainda não passou, então verificar se a aula está cheia
+
+                    // Recuperar dados do user do SharedPreferences
+                    val sharedPref = aulaHolder.itemView.context.getSharedPreferences("pmLogin", Context.MODE_PRIVATE)
+                    val idUser = sharedPref?.getInt("id_user", -1) ?: -1  // Caso id_user não esteja presente, retorna -1
+
+                    // Verificar o instrutor e a lotação da aula
                     val lotacaoUrl = "https://esan-tesp-ds-paw.web.ua.pt/tesp-ds-g37/api/verificarlotacaoaula.php"
                     val lotacaoParams = JSONObject().apply {
                         put("id_aula", aula.id_aula)
+                        put("id_user", idUser)
                     }
 
-                    val queue = Volley.newRequestQueue(context)
+                    // Log dos parâmetros enviados para a verificação do instrutor e da lotação
+                    Log.d("MarcacaoFragment", "Enviando para a API: id_aula = ${aula.id_aula}, id_user = $idUser")
+
+                    val queue = Volley.newRequestQueue(aulaHolder.itemView.context)
 
                     val lotacaoRequest = JsonObjectRequest(
                         Request.Method.POST, lotacaoUrl, lotacaoParams,
                         { lotacaoResponse ->
-                            val isLotacaoCheia = lotacaoResponse.optBoolean("isLotacaoCheia", false)
+                            // Verifica se o utilizador é o instrutor
+                            val isInstrutor = lotacaoResponse.optBoolean("isInstrutor", false)
 
-                            // Se a aula estiver cheia, não permite marcar e exibe uma mensagem
-                            if (isLotacaoCheia) {
-                                Log.d("MarcacaoFragment", "Aula com ID ${aula.id_aula} está cheia.")
-                                Toast.makeText(context, "Esta aula já está cheia", Toast.LENGTH_SHORT).show()
+                            // Log do valor de 'isInstrutor'
+                            Log.d("MarcacaoFragment", "isInstrutor: $isInstrutor")
+
+                            if (isInstrutor) {
+                                // Se o utilizador for o instrutor da aula, exibe a mensagem e interrompe o processo
+                                Log.d("MarcacaoFragment", "O utilizador é o instrutor da aula")
+                                Toast.makeText(aulaHolder.itemView.context, "Você é o instrutor desta aula, não pode marcar", Toast.LENGTH_SHORT).show()
                             } else {
-                                // Se a aula não estiver cheia, pode atualizar o estado de 'isMarked'
-                                aula.isMarked = true
+                                // Caso o utilizador não seja o instrutor, verifica a lotação
+                                val isLotacaoCheia = lotacaoResponse.optBoolean("isLotacaoCheia", false)
 
-                                // Chama o listener para fazer a operação de marcação
-                                listener.onAulaCheckClick(aula.id_aula, aula.userId, true)
+                                // Log do valor de 'isLotacaoCheia'
+                                Log.d("MarcacaoFragment", "isLotacaoCheia: $isLotacaoCheia")
 
-                                // Notifica o RecyclerView para atualizar o item da aula específico
-                                notifyItemChanged(position)
+                                if (isLotacaoCheia) {
+                                    Log.d("MarcacaoFragment", "Aula com ID ${aula.id_aula} está cheia.")
+                                    Toast.makeText(aulaHolder.itemView.context, "Esta aula já está cheia", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    // Se a aula não estiver cheia, pode atualizar o estado de 'isMarked'
+                                    aula.isMarked = true
+
+                                    // Chama o listener para fazer a operação de marcação
+                                    listener.onAulaCheckClick(aula.id_aula, aula.userId, true)
+
+                                    // Notifica o RecyclerView para atualizar o item da aula específico
+                                    notifyItemChanged(position)
+                                }
                             }
                         },
                         { error ->
                             Log.e("MarcacaoFragment", "Erro ao verificar lotação da aula: $error")
-                            Toast.makeText(context, "Erro ao verificar lotação da aula", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(aulaHolder.itemView.context, "Erro ao verificar lotação da aula", Toast.LENGTH_SHORT).show()
                         }
                     )
 
@@ -142,9 +166,12 @@ class AulasAdapter(
                 } else {
                     // Se a aula já passou, não permite marcar e exibe uma mensagem
                     Log.d("MarcacaoFragment", "Aula com ID ${aula.id_aula} já passou.")
-                    Toast.makeText(context, "Esta aula já não pode ser marcada", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(aulaHolder.itemView.context, "Esta aula já não pode ser marcada", Toast.LENGTH_SHORT).show()
                 }
             }
+
+
+
 
 
             aulaHolder.buttonDesmarcar.setOnClickListener {

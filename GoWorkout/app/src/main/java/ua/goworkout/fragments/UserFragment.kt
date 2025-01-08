@@ -57,7 +57,7 @@ class UserFragment : Fragment() {
         // Acesso ao array de frases motivacionais no momento certo
         frasesMotivacionais = resources.getStringArray(R.array.frases_motivacionais)
 
-        // Recuperar dados do usuário do SharedPreferences
+        // Recuperar dados do user do SharedPreferences
         val sharedPref = activity?.getSharedPreferences("pmLogin", Context.MODE_PRIVATE)
         val idUser = sharedPref?.getInt("id_user", -1)
         val id_clube = sharedPref?.getString("clube_id", "")

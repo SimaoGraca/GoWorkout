@@ -205,6 +205,94 @@
             android:lineSpacingExtra="5dp"/>
     </androidx.cardview.widget.CardView>
 
-    <!-- Botão 'Terminar Sessão' -->
+        <!-- Título 'Como Marcar Aulas' -->
+        <TextView
+            android:id="@+id/como_marcar_aulas_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="@string/text_comomarcar"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horariofunc_card" />
+
+        <!-- CardView para 'Como Marcar Aulas' -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/como_marcar_aulas_card"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:backgroundTint="#1e1e1e"
+            android:padding="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/como_marcar_aulas_title">
+
+            <!-- LinearLayout vertical para os passos -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:spacing="8dp"> <!-- Espaço entre os itens -->
+
+                <!-- TextView para o passo 1 -->
+                <TextView
+                    android:id="@+id/passo_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/passo_1_text"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="15dp"
+                    android:textColor="@android:color/white"
+                    android:lineSpacingExtra="5dp"
+                    android:textSize="14sp" />
+
+                <!-- TextView para o passo 2 -->
+                <TextView
+                    android:id="@+id/passo_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/passo_2_text"
+                    android:textColor="@android:color/white"
+                    android:lineSpacingExtra="5dp"
+                    android:paddingLeft="15dp"
+                    android:textSize="14sp" />
+
+                <!-- TextView para o passo 3 -->
+                <TextView
+                    android:id="@+id/passo_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/passo_3_text"
+                    android:paddingLeft="15dp"
+                    android:textColor="@android:color/white"
+                    android:lineSpacingExtra="5dp"
+                    android:textSize="14sp" />
+
+                <!-- TextView para a nota de disponibilidade -->
+                <TextView
+                    android:id="@+id/nota_disponibilidade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="15dp"
+                    android:text="@string/nota_disponibilidade"
+                    android:textColor="@android:color/white"
+                    android:lineSpacingExtra="5dp"
+                    android:paddingBottom="15dp"
+                    android:textSize="12sp"
+                    android:paddingTop="12dp" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+
+
+        <!-- Botão 'Terminar Sessão' -->
 </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

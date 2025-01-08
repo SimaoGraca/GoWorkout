@@ -88,6 +88,7 @@ class LoginActivity : AppCompatActivity() {
                         // Dentro da parte que trata a resposta JSON
                         if (status == "OK") {
                             val idUser = response.getInt("id_user")
+                            val tipo_user = response.getString("tipo_user")
                             val nome = response.getString("nome")
                             val genero = response.getString("genero")
                             val email = response.getString("email")
@@ -114,6 +115,7 @@ class LoginActivity : AppCompatActivity() {
                             sharedPref.edit().apply {
                                 putBoolean("login", true)
                                 putInt("id_user", idUser)
+                                putString("tipo_user", tipo_user)
                                 putString("nome", nome)
                                 putString("email", email)
                                 putString("genero", genero)
@@ -134,6 +136,8 @@ class LoginActivity : AppCompatActivity() {
                                 apply()
                             }
 
+
+
                             // Exibe o Toast de sucesso
                             Toast.makeText(this, "Login bem sucedido!", Toast.LENGTH_SHORT).show()
 
@@ -141,6 +145,7 @@ class LoginActivity : AppCompatActivity() {
                             val intent = Intent(this, BaseActivity::class.java).apply {
                                 putExtra("id_user", idUser)
                                 putExtra("nome", nome)
+                                putExtra("tipo_user", tipo_user)
                             }
                             startActivity(intent)
                             finish()
